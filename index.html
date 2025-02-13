@@ -25,20 +25,29 @@
                 const response = await fetch('/.auth/me');
                 if (response.ok) {
                     const data = await response.json();
-                    const userInfo = data[0];
-                    const email = userInfo.user_claims.find(claim => claim.typ === 'emails').val;
-                    const username = userInfo.user_claims.find(claim => claim.typ === 'name').val;
+                    console.log('User Info:', data); // Debugging: Log the entire response
 
-                    const userInfoDiv = document.getElementById('user-info');
-                    userInfoDiv.innerHTML = `
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">User Information</h5>
-                                <p class="card-text">Email: ${email}</p>
-                                <p class="card-text">Username: ${username}</p>
+                    if (data.length > 0) {
+                        const userInfo = data[0];
+                        const emailClaim = userInfo.user_claims.find(claim => claim.typ === 'emails');
+                        const nameClaim = userInfo.user_claims.find(claim => claim.typ === 'name');
+
+                        const email = emailClaim ? emailClaim.val : 'Email not found';
+                        const username = nameClaim ? nameClaim.val : 'Username not found';
+
+                        const userInfoDiv = document.getElementById('user-info');
+                        userInfoDiv.innerHTML = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">User Information</h5>
+                                    <p class="card-text">Email: ${email}</p>
+                                    <p class="card-text">Username: ${username}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    } else {
+                        console.error('No user information found.');
+                    }
                 } else {
                     console.error('Error fetching user info:', response.statusText);
                 }
