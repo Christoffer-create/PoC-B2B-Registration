@@ -1,16 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Local Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Static Web App</title>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <form id="b2bForm">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br>
-        <label for="displayName">Display Name:</label>
-        <input type="text" id="displayName" name="displayName" required><br>
-        <button type="submit">Send</button>
-    </form>
+    <h1>Welcome to My Static Web App</h1>
+    <div id="user-info"></div>
+
+    <script>
+        // Function to fetch and display user information
+        async function fetchUserInfo() {
+            try {
+                const response = await fetch('/.auth/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    const userInfoDiv = document.getElementById('user-info');
+                    userInfoDiv.innerHTML = `
+                        <p>User ID: ${data[0].user_id}</p>
+                        <p>Email: ${data[0].user_claims.find(claim => claim.typ === 'emails').val}</p>
+                        <p>Roles: ${data[0].user_claims.find(claim => claim.typ === 'roles').val}</p>
+                    `;
+                } else {
+                    console.error('Error fetching user info:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        }
+
+        // Call the function to fetch user information
+        fetchUserInfo();
+    </script>
 </body>
 </html>
