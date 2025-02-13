@@ -1,38 +1,63 @@
-async function fetchUserInfo() {
-    try {
-        const response = await fetch('/.auth/me');
+This is the HTML:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Static Web App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Welcome to My Static Web App</h1>
+        <div id="user-info" class="mt-3"></div>
+    </div>
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log('User Info:', data); // Debugging
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-            if (data.clientPrincipal) {
-                const userInfo = data.clientPrincipal;
-                console.log('Client Principal:', userInfo); // Debugging
+    <script>
+        // Function to fetch and display user information
+        async function fetchUserInfo() {
+            try {
+                const response = await fetch('/.auth/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('User Info:', data); // Debugging: Log the entire response
 
-                const email = userInfo.userDetails;
-                const username = userInfo.userId;
+                    if (data.clientPrincipal) {
+                        const userInfo = data.clientPrincipal;
+                        console.log('Client Principal:', userInfo); // Debugging: Log the clientPrincipal object
 
-                document.getElementById('user-info').innerHTML = `
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">User Information</h5>
-                            <p class="card-text">Email: ${email}</p>
-                            <p class="card-text">Username: ${username}</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                console.warn('User not authenticated, redirecting...');
-                window.location.href = "/.auth/login/aad"; // Redirect to login
+                        const email = userInfo.userDetails;
+                        const username = userInfo.userId;
+
+                        const userInfoDiv = document.getElementById('user-info');
+                        userInfoDiv.innerHTML = 
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">User Information</h5>
+                                    <p class="card-text">Email: ${email}</p>
+                                    <p class="card-text">Username: ${username}</p>
+                                </div>
+                            </div>
+                        ;
+                    } else {
+                        console.error('No user information found.');
+                    }
+                } else {
+                    console.error('Error fetching user info:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
             }
-        } else {
-            console.error('Error fetching user info:', response.statusText);
         }
-    } catch (error) {
-        console.error('Error fetching user info:', error);
-    }
-}
 
-// Call the function to fetch user info
-fetchUserInfo();
+        // Call the function to fetch user information
+        fetchUserInfo();
+    </script>
+</body>
+</html>
