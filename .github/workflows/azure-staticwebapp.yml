@@ -27,7 +27,7 @@ jobs:
         run: |
           sed -i 's|YOUR_TENANT_ID|'"${{ secrets.TENANT_ID }}"'|g' staticwebapp.config.json
 
-      - name: Debug: Check staticwebapp.config.json
+      - name: "Debug: Check staticwebapp.config.json"
         run: |
           cat staticwebapp.config.json  # This will print the file content to the logs
 
