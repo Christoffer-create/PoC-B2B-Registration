@@ -1,4 +1,3 @@
-This is the HTML:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +35,7 @@ This is the HTML:
                         const username = userInfo.userId;
 
                         const userInfoDiv = document.getElementById('user-info');
-                        userInfoDiv.innerHTML = 
+                        userInfoDiv.innerHTML = `
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">User Information</h5>
@@ -44,7 +43,7 @@ This is the HTML:
                                     <p class="card-text">Username: ${username}</p>
                                 </div>
                             </div>
-                        ;
+                        `;
                     } else {
                         console.error('No user information found.');
                     }
