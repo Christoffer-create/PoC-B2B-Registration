@@ -30,10 +30,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Set up Azure Tenant ID in config
-        run: |
-          # Replace placeholder in staticwebapp.config.json with the GitHub secret
-          sed -i "s|YOUR_TENANT_ID|${{ secrets.TENANT_ID }}|g" staticwebapp.config.json
+    - name: Replace Tenant ID in config
+      run: |
+        sed -i 's/YOUR_TENANT_ID/${{ secrets.TENANT_ID }}/g' staticwebapp.config.json
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
