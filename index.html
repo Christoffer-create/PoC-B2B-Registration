@@ -9,14 +9,14 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #143275; /* Background color */
-            color: white; /* Text color */
+            background-color: white; /* White background for the body */
+            color: #143275; /* Text color */
         }
 
         h1 {
             text-align: center;
             padding: 20px;
-            color: white;
+            color: #143275;
         }
 
         table {
@@ -25,7 +25,7 @@
             border-collapse: collapse;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #ffffff;
-            color: #143275; /* Text color for table */
+            color: #143275;
         }
 
         th, td {
@@ -49,7 +49,7 @@
         }
 
         .input-field {
-            width: 100%;
+            width: 80%;
             padding: 10px;
             margin: 8px 0;
             box-sizing: border-box;
@@ -60,7 +60,7 @@
         }
 
         .input-field-inline {
-            width: 80%;
+            width: 70%;
             padding: 10px;
             margin: 8px 0;
             box-sizing: border-box;
@@ -129,17 +129,13 @@
             <table id="user-table">
                 <thead>
                     <tr>
-                        <th>Attribute</th>
-                        <th>Details</th>
+                        <th>Sponsor's Email</th>
+                        <th>Sponsor's User ID</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Sponsor's Email</strong></td>
                         <td><input id="user-email" class="input-field" type="text" readonly></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Sponsor's User ID</strong></td>
                         <td><input id="user-id" class="input-field" type="text" readonly></td>
                     </tr>
                 </tbody>
@@ -150,12 +146,6 @@
         <div class="section-title">B2B Account Information</div>
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
                         <td><strong>External User Email</strong></td>
