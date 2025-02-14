@@ -36,11 +36,10 @@
                     <td>
                         <select class="form-select" name="usage_location" required>
                             <option value="">Select Location</option>
-                            <option value="US">United States</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="CA">Canada</option>
-                            <option value="AU">Australia</option>
-                            <option value="DE">Germany</option>
+                            <option value="US">Sweden</option>
+                            <option value="UK">Norway</option>
+                            <option value="CA">United Kingdom</option>
+                            <option value="AU">United States</option>
                         </select>
                     </td>
                 </tr>
@@ -53,8 +52,21 @@
     </form>
 
     <script>
-        // Simulating fetching the logged-in user's email (replace with actual session logic)
-        document.getElementById("userDetails").value = "user@example.com"; // Replace with session-based email
+        // Fetch user info from the /auth/me endpoint
+        fetch('/.auth/me')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const user = data[0]; // First item in the array is the user info
+                    document.getElementById("userEmail").value = user.userClaims.email; // Set the email in the email input field
+                    document.getElementById("sponsor").value = user.userClaims.email; // Set the sponsor field to the user's email
+                } else {
+                    console.log("No user session found.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching user info:", error);
+            });
     </script>
 
 </body>
