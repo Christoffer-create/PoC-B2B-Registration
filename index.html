@@ -59,6 +59,31 @@
             color: #143275;
         }
 
+        .input-field-inline {
+            width: 80%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            color: #143275;
+        }
+
+        .verify-btn {
+            background-color: #143275;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .verify-btn:hover {
+            background-color: #0e2b56;
+        }
+
         .error-message {
             text-align: center;
             color: red;
@@ -71,53 +96,91 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            width: 60%;
+            margin: 20px auto;
+            display: block;
             font-size: 16px;
         }
 
         .submit-btn:hover {
             background-color: #0e2b56;
         }
+
+        .section-title {
+            background-color: #143275;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Sponsor Details</h1>
-        <table id="user-table">
-            <thead>
-                <tr>
-                    <th>Attribute</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Sponsor's Email</strong></td>
-                    <td><input id="user-email" class="input-field" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><strong>Sponsor's User ID</strong></td>
-                    <td><input id="user-id" class="input-field" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><strong>External User Email</strong></td>
-                    <td><input id="external-email" class="input-field" type="email" placeholder="Enter external user email"></td>
-                </tr>
-                <tr>
-                    <td><strong>Last Name</strong></td>
-                    <td><input id="last-name" class="input-field" type="text" placeholder="Enter last name"></td>
-                </tr>
-                <tr>
-                    <td><strong>Company</strong></td>
-                    <td><input id="company" class="input-field" type="text" placeholder="Enter company name"></td>
-                </tr>
-                <tr>
-                    <td><strong>Phone Number</strong></td>
-                    <td><input id="phone" class="input-field" type="text" placeholder="Enter phone number"></td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="submit-btn" id="submit-btn">Submit</button>
+
+        <!-- Sponsor Details Section -->
+        <div class="section-title">Sponsor Details</div>
+        <div class="table-container">
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sponsor's Email</strong></td>
+                        <td><input id="user-email" class="input-field" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sponsor's User ID</strong></td>
+                        <td><input id="user-id" class="input-field" type="text" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- B2B Account Information Section -->
+        <div class="section-title">B2B Account Information</div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>External User Email</strong></td>
+                        <td>
+                            <input id="external-email" class="input-field-inline" type="email" placeholder="Enter external user email" disabled>
+                            <button id="verify-btn" class="verify-btn" disabled>Verify</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last Name</strong></td>
+                        <td><input id="last-name" class="input-field" type="text" placeholder="Enter last name" disabled></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company</strong></td>
+                        <td><input id="company" class="input-field" type="text" placeholder="Enter company name" disabled></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone Number</strong></td>
+                        <td><input id="phone" class="input-field" type="text" placeholder="Enter phone number" disabled></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="submit-btn" id="submit-btn" disabled>Submit</button>
         <p id="error-message" class="error-message"></p>
     </div>
 
@@ -149,44 +212,9 @@
                 document.getElementById("user-id").value = "N/A";
             }
 
-            // Add event listener to submit button
-            document.getElementById("submit-btn").addEventListener("click", async () => {
-                const email = document.getElementById("user-email").value;
-                const userId = document.getElementById("user-id").value;
-                const externalEmail = document.getElementById("external-email").value;
-                const lastName = document.getElementById("last-name").value;
-                const company = document.getElementById("company").value;
-                const phone = document.getElementById("phone").value;
-
-                // Collect data
-                const payload = {
-                    email: email,
-                    userId: userId,
-                    externalEmail: externalEmail,
-                    lastName: lastName,
-                    company: company,
-                    phone: phone
-                };
-
-                // Send data to Logic App
-                try {
-                    const response = await fetch('<YOUR_LOGIC_APP_HTTP_TRIGGER_URL>', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
-
-                    if (response.ok) {
-                        alert('Data sent successfully');
-                    } else {
-                        alert('Error sending data');
-                    }
-                } catch (error) {
-                    alert('Error sending data: ' + error.message);
-                }
-            });
+            // Disable buttons for now
+            document.getElementById("verify-btn").disabled = true;
+            document.getElementById("submit-btn").disabled = true;
         });
     </script>
 </body>
