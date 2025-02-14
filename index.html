@@ -5,206 +5,219 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B2B Account Creation</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-            color: #143275;
+        /* Apply repeating diagonal background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://one.skanska.com/49a1bb/contentassets/e3b566e0d1034ecaa95a3726bbbf8eb0/skanska_logotype_blue_rgb.png');
+            background-repeat: repeat;
+            background-size: 200px 200px; /* Adjust pattern size */
+            transform: rotate(45deg);
+            transform-origin: center;
+            z-index: -1;
         }
 
-        h1 {
-            text-align: center;
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
             padding: 20px;
-            color: #143275;
+            text-align: center;
         }
 
         .container {
-            max-width: 60%;
+            max-width: 600px;
             margin: 0 auto;
         }
 
+        /* Section titles */
         .section-title {
             background-color: #143275;
             color: white;
-            text-align: center;
-            padding: 12px;
-            font-size: 18px;
+            padding: 10px;
+            font-size: 20px;
             font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
             width: 100%;
-            border-radius: 8px 8px 0 0;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
 
+        /* Table styling */
         .table-container {
-            width: 100%;
             background-color: white;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adds shadow */
+            padding: 10px;
             border-radius: 8px;
-            overflow: hidden;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
-            padding: 15px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #ffffff;
-            color: #143275;
         }
 
         th {
             background-color: #143275;
             color: white;
-            padding: 12px;
+            padding: 10px;
             text-align: left;
         }
 
         td {
-            padding: 12px;
-            text-align: left;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
         }
 
-        /* Removed table hover effect */
+        /* Remove hover effect on table rows */
         tr:hover {
             background-color: transparent;
         }
 
-        .input-field {
-            width: 95%;
-            padding: 10px;
-            margin: 8px 0;
+        /* Input fields */
+        input {
+            width: 100%;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            background-color: #f0f0f0;
-            color: #143275;
+            font-size: 16px;
         }
 
-        .input-field-inline {
-            width: 70%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f0f0f0;
-            color: #143275;
-        }
-
-        .verify-btn {
+        /* Button styling */
+        .button {
             background-color: #143275;
             color: white;
-            padding: 10px 20px;
             border: none;
+            padding: 10px 15px;
+            font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0f285e;
+        }
+
+        /* Verify button next to input */
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .input-group button {
             margin-left: 10px;
         }
 
-        .verify-btn:hover {
-            background-color: #0e2b56;
+        /* Full-width submit button */
+        .submit-container {
+            text-align: center;
+            margin-top: 20px;
         }
 
-    .submit-container {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 10px;
-    }
-
-    .submit-btn {
-        background-color: #143275;
-        color: white;
-        padding: 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        width: 100%; /* Now matches table width */
-    }
-
-    .submit-btn:hover {
-        background-color: #0e2b56;
-    }
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>B2B Account Creation</h1>
 
-        <!-- Sponsor Details Section -->
+        <!-- Sponsor Details -->
+        <div class="section-title">Sponsor Details</div>
         <div class="table-container">
-            <div class="section-title">Sponsor Details</div>
             <table>
-                <tbody>
-                    <tr>
-                        <td><strong>Sponsor's Email</strong></td>
-                    </tr>
-                    <tr>
-                        <td><input id="user-email" class="input-field" type="text" readonly></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Sponsor's User ID</strong></td>
-                    </tr>
-                    <tr>
-                        <td><input id="user-id" class="input-field" type="text" readonly></td>
-                    </tr>
-                </tbody>
+                <tr>
+                    <td><strong>Sponsor Email:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="sponsorEmail" readonly></td>
+                </tr>
+                <tr>
+                    <td><strong>Sponsor User ID:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="sponsorUserId" readonly></td>
+                </tr>
             </table>
         </div>
 
-        <!-- B2B Account Information Section -->
+        <!-- B2B Account Information -->
+        <div class="section-title">B2B Account Information</div>
         <div class="table-container">
-            <div class="section-title">B2B Account Information</div>
             <table>
-                <tbody>
-                    <tr>
-                        <td><strong>External User Email</strong></td>
-                        <td>
-                            <input id="external-email" class="input-field-inline" type="email" placeholder="Enter external user email">
-                            <button id="verify-btn" class="verify-btn">Verify</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Last Name</strong></td>
-                        <td><input id="last-name" class="input-field" type="text" placeholder="Enter last name"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Company</strong></td>
-                        <td><input id="company" class="input-field" type="text" placeholder="Enter company name"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Phone Number</strong></td>
-                        <td><input id="phone" class="input-field" type="text" placeholder="Enter phone number"></td>
-                    </tr>
-                </tbody>
+                <tr>
+                    <td><strong>External User Email:</strong></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <input type="email" id="externalEmail">
+                            <button class="button">Verify</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="lastName"></td>
+                </tr>
+                <tr>
+                    <td><strong>Company:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="company"></td>
+                </tr>
+                <tr>
+                    <td><strong>Phone Number:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="phoneNumber"></td>
+                </tr>
             </table>
         </div>
 
-        <button class="submit-btn" id="submit-btn">Submit</button>
+        <!-- Submit Button -->
+        <div class="submit-container">
+            <button class="button submit-button">Submit</button>
+        </div>
     </div>
 
     <script>
+        // Fetch session user info
         document.addEventListener("DOMContentLoaded", async () => {
             async function getUserInfo() {
                 try {
                     const response = await fetch('/.auth/me');
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user details');
-                    }
+                    if (!response.ok) throw new Error("Not authenticated");
                     const payload = await response.json();
                     return payload.clientPrincipal;
                 } catch (error) {
-                    console.error(error);
+                    console.error("Error fetching user info:", error);
                     return null;
                 }
             }
 
             const user = await getUserInfo();
             if (user) {
-                document.getElementById("user-email").value = user.userDetails || "N/A";
-                document.getElementById("user-id").value = user.userId || "N/A";
+                document.getElementById("sponsorEmail").value = user.userDetails;
+                document.getElementById("sponsorUserId").value = user.userId;
             } else {
-                document.getElementById("user-email").value = "User not logged in";
-                document.getElementById("user-id").value = "N/A";
+                document.getElementById("sponsorEmail").value = "Not logged in";
+                document.getElementById("sponsorUserId").value = "Not logged in";
             }
         });
     </script>
