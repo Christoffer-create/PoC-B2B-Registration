@@ -138,5 +138,30 @@
         
         <button class="button full-width-button">Submit</button>
     </div>
+    <script>
+        // Fetch session user info
+        document.addEventListener("DOMContentLoaded", async () => {
+            async function getUserInfo() {
+                try {
+                    const response = await fetch('/.auth/me');
+                    if (!response.ok) throw new Error("Not authenticated");
+                    const payload = await response.json();
+                    return payload.clientPrincipal;
+                } catch (error) {
+                    console.error("Error fetching user info:", error);
+                    return null;
+                }
+            }
+
+            const user = await getUserInfo();
+            if (user) {
+                document.getElementById("sponsorEmail").value = user.userDetails;
+                document.getElementById("sponsorUserId").value = user.userId;
+            } else {
+                document.getElementById("sponsorEmail").value = "Not logged in";
+                document.getElementById("sponsorUserId").value = "Not logged in";
+            }
+        });
+    </script>
 </body>
 </html>
