@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Email</title>
+    <title>User Details</title>
 </head>
 <body>
-    <h1>User Email</h1>
+    <h1>User Details</h1>
+    <div id="user-details"></div>
 
-    <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
     <script>
-        async function getUserInfo() {
-            const response = await fetch('/.auth/me');
-            const payload = await response.json();
-            const { clientPrincipal } = payload;
-            return clientPrincipal;
-        }
+        document.addEventListener("DOMContentLoaded", async () => {
+            async function getUserInfo() {
+                const response = await fetch('/.auth/me');
+                const payload = await response.json();
+                const { clientPrincipal } = payload;
+                return clientPrincipal;
+            }
 
-        (async () => {
             const user = await getUserInfo();
             if (user) {
                 document.getElementById("user-details").innerHTML = `
@@ -27,7 +27,7 @@
             } else {
                 document.getElementById("user-details").innerHTML = `<p>User not logged in</p>`;
             }
-        })();
+        });
     </script>
 </body>
 </html>
