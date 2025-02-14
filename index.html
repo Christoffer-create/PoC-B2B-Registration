@@ -58,8 +58,8 @@
             .then(data => {
                 if (data && data.length > 0) {
                     const user = data[0]; // First item in the array is the user info
-                    document.getElementById("userEmail").value = user.userClaims.email; // Set the email in the email input field
-                    document.getElementById("sponsor").value = user.userClaims.email; // Set the sponsor field to the user's email
+                    document.getElementById("userEmail").value = user.userClaims.UserId; // Set the email in the email input field
+                    document.getElementById("Sponsor").value = user.userClaims.UserDetails; // Set the sponsor field to the user's email
                 } else {
                     console.log("No user session found.");
                 }
