@@ -51,22 +51,26 @@
         </div>
     </form>
 
-    <script>
-        // Fetch user info from the /auth/me endpoint
+   <script>
+        // Fetch user information from the .auth/me endpoint
         fetch('/.auth/me')
             .then(response => response.json())
             .then(data => {
-                if (data && data.length > 0) {
-                    const user = data[0]; // First item in the array is the user info
-                    document.getElementById("userEmail").value = user.userClaims.UserId; // Set the email in the email input field
-                    document.getElementById("Sponsor").value = user.userClaims.UserDetails; // Set the sponsor field to the user's email
+                if (data.length > 0) {
+                    // User is authenticated, extract user info from the data
+                    const user = data[0].userClaims;
+                    
+                    // Assigning email and user ID (you can customize based on claims available)
+                    const emailClaim = user.find(claim => claim.typ === 'email');
+                    const userIdClaim = user.find(claim => claim.typ === 'sub');
+                    
+                    document.getElementById('userDetails').value = emailClaim ? emailClaim.val : 'Email not available';
+                    document.getElementById('userId').value = userIdClaim ? userIdClaim.val : 'User ID not available';
                 } else {
-                    console.log("No user session found.");
+                    alert('User is not authenticated.');
                 }
             })
-            .catch(error => {
-                console.error("Error fetching user info:", error);
-            });
+            .catch(error => console.error('Error fetching user info:', error));
     </script>
 
 </body>
