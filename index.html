@@ -224,7 +224,7 @@
 async function verifyUser() {
     const email = document.getElementById("externalUserEmail").value;
     if (!email) {
-        alert("Please enter an email to verify.");
+        showAlert("Please enter an email to verify.");
         return;
     }
            document.getElementById("loadingContainer").style.display = "flex";
@@ -253,14 +253,14 @@ async function verifyUser() {
             document.getElementById("phoneNumber").value = data.phoneNumber || "";
             document.getElementById("givenName").value = data.givenName || "";
             document.getElementById("usageLocation").value = data.usageLocation || "";
-            alert("An account with the given email exists!");
+            showAlert("An account with the given email exists!");
         } else {
-            alert("No account found.");
+            showAlert("No account found.");
         }
 
     } catch (error) {
         clearFields();
-        alert("Error: " + error.message);
+        showAlert("Error: " + error.message);
     } finally {
     document.getElementById("loadingContainer").style.display = "none";
 }
