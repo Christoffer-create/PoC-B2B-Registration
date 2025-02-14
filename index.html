@@ -212,6 +212,14 @@
             }
         });
 
+        function clearFields() {
+    document.getElementById("lastName").value = "";
+    document.getElementById("company").value = "";
+    document.getElementById("phoneNumber").value = "";
+    document.getElementById("givenName").value = "";
+    document.getElementById("usageLocation").value = "";
+}
+
         // Verify Button Click - Checks Entra ID for Existing User
 async function verifyUser() {
     const email = document.getElementById("externalUserEmail").value;
@@ -245,6 +253,7 @@ async function verifyUser() {
         }
 
     } catch (error) {
+        clearFields();
         alert("Error: " + error.message);
     } finally {
     document.getElementById("loadingContainer").style.display = "none";
