@@ -9,9 +9,12 @@
     "401": {
       "statusCode": 302,
       "redirect": "/.auth/login/aad"
+    },
+    "403": {
+      "statusCode": 403,
+      "redirect": "/unauthorized"
     }
   },
-  {
   "auth": {
     "identityProviders": {
       "azureActiveDirectory": {
