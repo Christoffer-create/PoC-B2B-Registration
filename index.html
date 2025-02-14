@@ -3,64 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration Form</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>User Information Form</title>
 </head>
-<body class="container mt-5">
+<body>
+    <h1>Azure Static Web App User Info</h1>
 
-    <h2 class="text-center mb-4">User Registration Form</h2>
-    
     <form id="userForm">
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Attribute</th>
-                    <th>Input</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Sponsor Email:</strong></td>
-                    <td><input type="email" class="form-control" id="sponsorEmail" readonly></td>
-                </tr>
-                <tr>
-                    <td><strong>Name:</strong></td>
-                    <td><input type="text" class="form-control" name="name" required placeholder="Enter full name"></td>
-                </tr>
-                <tr>
-                    <td><strong>Employee ID:</strong></td>
-                    <td><input type="text" class="form-control" name="employee_id" required placeholder="Enter employee ID"></td>
-                </tr>
-                <tr>
-                    <td><strong>Usage Location:</strong></td>
-                    <td>
-                        <select class="form-select" name="usage_location" required>
-                            <option value="">Select Location</option>
-                            <option value="US">Sweden</option>
-                            <option value="UK">Norway</option>
-                            <option value="CA">United Kingdom</option>
-                            <option value="AU">United States</option>
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <label for="userDetails">User Email:</label>
+        <input type="text" id="userDetails" name="userDetails" readonly /><br><br>
 
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId" readonly /><br><br>
+
+        <!-- Additional fields you want the user to fill out -->
+        <input type="submit" value="Submit" />
     </form>
 
-   <script>
+    <script>
         // Fetch user information from the .auth/me endpoint
         fetch('/.auth/me')
             .then(response => response.json())
             .then(data => {
+                console.log(data);  // This will help us inspect the full response
+
                 if (data.length > 0) {
                     // User is authenticated, extract user info from the data
                     const user = data[0].userClaims;
                     
-                    // Assigning email and user ID (you can customize based on claims available)
+                    // Extract email and user ID from claims
                     const emailClaim = user.find(claim => claim.typ === 'email');
                     const userIdClaim = user.find(claim => claim.typ === 'sub');
                     
@@ -72,6 +42,5 @@
             })
             .catch(error => console.error('Error fetching user info:', error));
     </script>
-
 </body>
 </html>
