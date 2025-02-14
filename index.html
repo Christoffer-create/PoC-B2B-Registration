@@ -9,8 +9,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: white; /* White background for the body */
-            color: #143275; /* Text color */
+            background-color: white;
+            color: #143275;
         }
 
         h1 {
@@ -19,40 +19,61 @@
             color: #143275;
         }
 
+        .container {
+            max-width: 60%;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            background-color: #143275;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .table-container {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adds shadow */
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
         table {
-            width: 60%;
-            margin: 20px auto;
+            width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #ffffff;
             color: #143275;
         }
 
-        th, td {
+        th {
+            background-color: #143275;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        th {
-            background-color: #143275; /* Table header color */
-            color: white; /* Text color in header */
-        }
-
+        /* Removed table hover effect */
         tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            background-color: transparent;
         }
 
         .input-field {
-            width: 80%;
+            width: 95%;
             padding: 10px;
             margin: 8px 0;
-            box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
             background-color: #f0f0f0;
@@ -62,8 +83,6 @@
         .input-field-inline {
             width: 70%;
             padding: 10px;
-            margin: 8px 0;
-            box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
             background-color: #f0f0f0;
@@ -84,38 +103,20 @@
             background-color: #0e2b56;
         }
 
-        .error-message {
-            text-align: center;
-            color: red;
-        }
-
         .submit-btn {
             background-color: #143275;
             color: white;
-            padding: 12px 24px;
+            padding: 12px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 60%;
-            margin: 20px auto;
+            width: 100%;
             display: block;
             font-size: 16px;
         }
 
         .submit-btn:hover {
             background-color: #0e2b56;
-        }
-
-        .section-title {
-            background-color: #143275;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
-
-        .table-container {
-            margin-top: 20px;
         }
     </style>
 </head>
@@ -124,18 +125,20 @@
         <h1>B2B Account Creation</h1>
 
         <!-- Sponsor Details Section -->
-        <div class="section-title">Sponsor Details</div>
         <div class="table-container">
-            <table id="user-table">
-                <thead>
-                    <tr>
-                        <th>Sponsor's Email</th>
-                        <th>Sponsor's User ID</th>
-                    </tr>
-                </thead>
+            <div class="section-title">Sponsor Details</div>
+            <table>
                 <tbody>
                     <tr>
+                        <td><strong>Sponsor's Email</strong></td>
+                    </tr>
+                    <tr>
                         <td><input id="user-email" class="input-field" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sponsor's User ID</strong></td>
+                    </tr>
+                    <tr>
                         <td><input id="user-id" class="input-field" type="text" readonly></td>
                     </tr>
                 </tbody>
@@ -143,40 +146,38 @@
         </div>
 
         <!-- B2B Account Information Section -->
-        <div class="section-title">B2B Account Information</div>
         <div class="table-container">
+            <div class="section-title">B2B Account Information</div>
             <table>
                 <tbody>
                     <tr>
                         <td><strong>External User Email</strong></td>
                         <td>
-                            <input id="external-email" class="input-field-inline" type="email" placeholder="Enter external user email" disabled>
-                            <button id="verify-btn" class="verify-btn" disabled>Verify</button>
+                            <input id="external-email" class="input-field-inline" type="email" placeholder="Enter external user email">
+                            <button id="verify-btn" class="verify-btn">Verify</button>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Last Name</strong></td>
-                        <td><input id="last-name" class="input-field" type="text" placeholder="Enter last name" disabled></td>
+                        <td><input id="last-name" class="input-field" type="text" placeholder="Enter last name"></td>
                     </tr>
                     <tr>
                         <td><strong>Company</strong></td>
-                        <td><input id="company" class="input-field" type="text" placeholder="Enter company name" disabled></td>
+                        <td><input id="company" class="input-field" type="text" placeholder="Enter company name"></td>
                     </tr>
                     <tr>
                         <td><strong>Phone Number</strong></td>
-                        <td><input id="phone" class="input-field" type="text" placeholder="Enter phone number" disabled></td>
+                        <td><input id="phone" class="input-field" type="text" placeholder="Enter phone number"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <button class="submit-btn" id="submit-btn" disabled>Submit</button>
-        <p id="error-message" class="error-message"></p>
+        <button class="submit-btn" id="submit-btn">Submit</button>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
-            // Fetch user info
             async function getUserInfo() {
                 try {
                     const response = await fetch('/.auth/me');
@@ -184,15 +185,13 @@
                         throw new Error('Failed to fetch user details');
                     }
                     const payload = await response.json();
-                    const { clientPrincipal } = payload;
-                    return clientPrincipal;
+                    return payload.clientPrincipal;
                 } catch (error) {
-                    document.getElementById("error-message").innerText = error.message;
+                    console.error(error);
                     return null;
                 }
             }
 
-            // Get user info
             const user = await getUserInfo();
             if (user) {
                 document.getElementById("user-email").value = user.userDetails || "N/A";
@@ -201,10 +200,6 @@
                 document.getElementById("user-email").value = "User not logged in";
                 document.getElementById("user-id").value = "N/A";
             }
-
-            // Disable buttons for now
-            document.getElementById("verify-btn").disabled = true;
-            document.getElementById("submit-btn").disabled = true;
         });
     </script>
 </body>
