@@ -121,6 +121,11 @@
                    <button class="button" onclick="verifyUser()">Verify</button>
                     </td>
                 </tr>
+                <td><strong>First name:</strong></td>
+                </tr>
+                <tr>
+                <td><input type="text" id="givenName"></td>
+                </tr>
                 <tr>
                     <td><strong>Last Name:</strong></td>
                 </tr>
@@ -139,6 +144,12 @@
                 <tr>
                     <td><input type="text" id="phoneNumber"></td>
                 </tr>
+                <td><strong>Country:</strong></td>
+                </tr>
+                <tr>
+                <td><input type="text" id="usageLocation"></td>
+                </tr>
+                <tr>
             </table>
         </div>
         
@@ -191,10 +202,12 @@ async function verifyUser() {
 
         const data = await response.json();
         
-        if (data.lastName || data.company || data.phoneNumber) {
+        if (data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
             document.getElementById("lastName").value = data.lastName || "";
             document.getElementById("company").value = data.company || "";
             document.getElementById("phoneNumber").value = data.phoneNumber || "";
+            document.getElementById("givenName").value = data.givenName || "";
+            document.getElementById("usageLocation").value = data.usageLocation || "";
             alert("Account found!");
         } else {
             alert("No account found.");
