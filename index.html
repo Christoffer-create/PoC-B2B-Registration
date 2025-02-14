@@ -153,11 +153,19 @@
             document.getElementById("submit-btn").addEventListener("click", async () => {
                 const email = document.getElementById("user-email").value;
                 const userId = document.getElementById("user-id").value;
+                const externalEmail = document.getElementById("external-email").value;
+                const lastName = document.getElementById("last-name").value;
+                const company = document.getElementById("company").value;
+                const phone = document.getElementById("phone").value;
 
                 // Collect data
                 const payload = {
                     email: email,
                     userId: userId,
+                    externalEmail: externalEmail,
+                    lastName: lastName,
+                    company: company,
+                    phone: phone
                 };
 
                 // Send data to Logic App
