@@ -5,9 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B2B Account Creation</title>
     <style>
-        #loadingMessage {
-        display: none;
-        color: blue;
+        #loadingContainer {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .spinner {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +106,10 @@
     </style>
 </head>
 <body>
-    <div id="loadingMessage">Searching for user, please wait...</div>
+    <div id="loadingContainer">
+        <div class="spinner"></div>
+        <p>Loading, please wait...</p>
+    </div>
     <div class="container">
         <h1>B2B Account Creation</h1>
         
@@ -193,7 +212,7 @@ async function verifyUser() {
         alert("Please enter an email to verify.");
         return;
     }
-           document.getElementById("loadingMessage").style.display = "block";
+           document.getElementById("loadingContainer").style.display = "block";
     try {
         const response = await fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=nabAQ5roRwe6IO0ZJpWRKSNv92b490jWPiSvYiN16bY", {
             method: "POST",
@@ -221,7 +240,7 @@ async function verifyUser() {
     } catch (error) {
         alert("Error: " + error.message);
     } finally {
-    document.getElementById("loadingMessage").style.display = "none";
+    document.getElementById("loadingContainer").style.display = "none";
 }
 }
 
