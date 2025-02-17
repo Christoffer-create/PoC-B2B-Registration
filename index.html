@@ -248,8 +248,7 @@ async function verifyUser() {
 
         const data = await response.json();
         
-        if ((data.givenName || data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
-            document.getElementById("givenName").value = data.lastName || "";
+        if (data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
             document.getElementById("lastName").value = data.lastName || "";
             document.getElementById("company").value = data.company || "";
             document.getElementById("phoneNumber").value = data.phoneNumber || "";
