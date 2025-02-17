@@ -213,6 +213,7 @@
         });
 
         function clearFields() {
+    document.getElementById("givenName").value = "";
     document.getElementById("lastName").value = "";
     document.getElementById("company").value = "";
     document.getElementById("phoneNumber").value = "";
@@ -247,7 +248,8 @@ async function verifyUser() {
 
         const data = await response.json();
         
-        if (data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
+        if ((data.givenName || data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
+            document.getElementById("givenName").value = data.lastName || "";
             document.getElementById("lastName").value = data.lastName || "";
             document.getElementById("company").value = data.company || "";
             document.getElementById("phoneNumber").value = data.phoneNumber || "";
@@ -270,6 +272,7 @@ async function verifyUser() {
         // Submit Button Click - Send Data to Logic App
         document.getElementById("submitButton").addEventListener("click", async () => {
             const payload = {
+                givenName: document.getElementById("givenName").value,
                 sponsorEmail: document.getElementById("sponsorEmail").value,
                 sponsorUserId: document.getElementById("sponsorUserId").value,
                 externalUserEmail: document.getElementById("externalUserEmail").value,
