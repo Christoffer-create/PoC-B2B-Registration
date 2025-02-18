@@ -278,20 +278,23 @@
 
                 const data = await response.json();
 
-                if (data.userId) {
-                    document.getElementById("sponsorUserId").value = data.userId;
-                    showMessage("Sponsor account found and User ID populated.", "success");
-                } else {
-                    showMessage("No account found with that email.", "error");
-                }
-
-            } catch (error) {
-                document.getElementById("sponsorUserId").value = "";
-                showMessage("Error: " + error.message, "error");
-            } finally {
-                document.getElementById("loadingContainer").style.display = "none";
-                document.getElementById("verifySpinner").style.display = "none";
-            }
+                if (data.sponsorUserId) {
+            document.getElementById("sponsorUserId").value = data.sponsorUserId || ""; // Populate sponsorUserId
+            alert("Sponsor verified and details populated!");
+        } else {
+            // Clear all fields and notify user if no data is returned
+            document.getElementById("sponsorUserId").value = "";
+            alert("Sponsor not found.");
+        }
+    } catch (error) {
+        console.error("Error verifying sponsor:", error);
+        // Clear all fields if there's an error
+        document.getElementById("sponsorUserId").value = "";
+        alert("Error verifying sponsor.");
+    } finally {
+        // Hide loading spinner
+        document.getElementById("loadingContainer").style.display = "none";
+    }
         }
 
         function showMessage(message, type) {
