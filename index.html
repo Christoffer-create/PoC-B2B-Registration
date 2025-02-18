@@ -5,45 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B2B Account Creation</title>
     <style>
-        #loadingContainer {
-            display: none; /* Ensure the spinner is hidden initially */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .spinner {
-            border: 10px solid #f3f3f3; /* 60% of the original 16px */
-            border-top: 10px solid #3498db; /* 60% of the original 16px */
-            border-radius: 50%;
-            width: 72px; /* 60% of the original 120px */
-            height: 72px; /* 60% of the original 120px */
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+        /* Improved styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-            text-align: center;
             margin: 0;
             padding: 20px;
         }
@@ -85,8 +50,8 @@
             text-align: left;
         }
 
-        input {
-            width: calc(100% - 20px);
+        input, select {
+            width: 100%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -96,7 +61,6 @@
 
         .button-container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
         }
 
@@ -108,6 +72,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-left: 10px;
         }
 
         .button:hover {
@@ -118,13 +83,48 @@
             width: 100%;
             margin-top: 10px;
         }
+
+        /* Spinner styles */
+        .spinner {
+            border: 10px solid #f3f3f3; /* 60% of the original 16px */
+            border-top: 10px solid #3498db; /* 60% of the original 16px */
+            border-radius: 50%;
+            width: 16px; /* Smaller spinner */
+            height: 16px; /* Smaller spinner */
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
-    <div id="loadingContainer">
+
+    <!-- Loading Spinner -->
+    <div id="loadingContainer" style="display: none;">
         <div class="spinner"></div>
         <p>Searching for account, please wait...</p>
     </div>
+
     <div class="container">
         <h1>B2B Account Creation</h1>
 
@@ -133,10 +133,14 @@
         <div class="table-container">
             <table>
                 <tr>
-                    <td><strong>Sponsor Email:</strong></td>
+                    <td><label for="sponsorEmail"><strong>Sponsor Email:</strong></label></td>
                 </tr>
                 <tr>
-                    <td><input type="text" id="sponsorEmail" readonly></td>
+                    <td class="button-container">
+                        <input type="email" id="sponsorEmail" required>
+                        <button class="button" onclick="verifySponsor()">Verify</button>
+                        <span id="verifySpinner" class="spinner" style="display: none;"></span>
+                    </td>
                 </tr>
                 <tr>
                     <td><strong>Sponsor User ID:</strong></td>
@@ -145,6 +149,7 @@
                     <td><input type="text" id="sponsorUserId" readonly></td>
                 </tr>
             </table>
+            <div id="sponsorMessage" class="message" style="display: none;"></div>
         </div>
 
         <!-- B2B Account Information Section -->
@@ -152,58 +157,60 @@
         <div class="table-container">
             <table>
                 <tr>
-                    <td><strong>External User Email:</strong></td>
+                    <td><label for="externalUserEmail"><strong>External User Email:</strong></label></td>
                 </tr>
                 <tr>
                     <td class="button-container">
-                   <input type="text" id="externalUserEmail">
-                   <button class="button" onclick="verifyUser()">Verify</button>
+                        <input type="email" id="externalUserEmail" required>
+                        <button class="button" onclick="verifyUser()">Verify</button>
                     </td>
                 </tr>
-                <td><strong>First name:</strong></td>
+                <tr>
+                    <td><strong>First name:</strong></td>
                 </tr>
                 <tr>
-                <td><input type="text" id="givenName"></td>
+                    <td><input type="text" id="givenName" required></td>
                 </tr>
                 <tr>
                     <td><strong>Last Name:</strong></td>
                 </tr>
                 <tr>
-                    <td><input type="text" id="lastName"></td>
+                    <td><input type="text" id="lastName" required></td>
                 </tr>
                 <tr>
                     <td><strong>Company:</strong></td>
                 </tr>
                 <tr>
-                    <td><input type="text" id="company"></td>
+                    <td><input type="text" id="company" required></td>
                 </tr>
                 <tr>
                     <td><strong>Phone Number:</strong></td>
                 </tr>
                 <tr>
-                    <td><input type="text" id="phoneNumber"></td>
+                    <td><input type="text" id="phoneNumber" required></td>
                 </tr>
-<tr>
-  <td><strong>Country:</strong></td>
-</tr>
-<tr>
-  <td>
-    <select id="usageLocation">
-      <option value="SE">Sweden</option>
-      <option value="PL">Poland</option>
-      <option value="NO">Norway</option>
-      <option value="US">United States</option>
-      <option value="UK">United Kingdom</option>
-      <option value="HU">Hungary</option>
-      <option value="CZ">Czech Republic</option>
-      <option value="SK">Slovakia</option>
-    </select>
-  </td>
-</tr>
+                <tr>
+                    <td><strong>Country:</strong></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select id="usageLocation" required>
+                            <option value="SE">Sweden</option>
+                            <option value="PL">Poland</option>
+                            <option value="NO">Norway</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="HU">Hungary</option>
+                            <option value="CZ">Czech Republic</option>
+                            <option value="SK">Slovakia</option>
+                        </select>
+                    </td>
+                </tr>
             </table>
         </div>
 
         <button class="button full-width-button" id="submitButton">Submit</button>
+        <div id="formMessage" class="message" style="display: none;"></div>
     </div>
 
     <script>
@@ -232,93 +239,104 @@
         });
 
         function clearFields() {
-    document.getElementById("givenName").value = "";
-    document.getElementById("lastName").value = "";
-    document.getElementById("company").value = "";
-    document.getElementById("phoneNumber").value = "";
-    document.getElementById("givenName").value = "";
-    document.getElementById("usageLocation").value = "";
-}
-
-        // Verify Button Click - Checks Entra ID for Existing User
-async function verifyUser() {
-    const email = document.getElementById("externalUserEmail").value;
-    if (!email) {
-        alert("Please enter an email to verify.");
-        return;
-    }
-           document.getElementById("loadingContainer").style.display = "flex";
-    try {
-        const response = await fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email: email })
-        });
-
-        if (response.status === 404) {
-            clearFields();
-            alert("No account found.");
-            return;
+            document.getElementById("givenName").value = "";
+            document.getElementById("lastName").value = "";
+            document.getElementById("company").value = "";
+            document.getElementById("phoneNumber").value = "";
+            document.getElementById("givenName").value = "";
+            document.getElementById("usageLocation").value = "";
         }
 
-        if (!response.ok) throw new Error("User not found");
+        // Verify Sponsor Button Click - Checks for Existing User
+        async function verifySponsor() {
+            const sponsorEmail = document.getElementById("sponsorEmail").value;
+            if (!sponsorEmail) {
+                alert("Please enter a Sponsor Email to verify.");
+                return;
+            }
 
-        const data = await response.json();
-
-        if (data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
-            document.getElementById("lastName").value = data.lastName || "";
-            document.getElementById("company").value = data.company || "";
-            document.getElementById("phoneNumber").value = data.phoneNumber || "";
-            document.getElementById("givenName").value = data.givenName || "";
-            document.getElementById("usageLocation").value = data.usageLocation || "";
-            alert("An account with the given email exists!");
-        } else {
-            alert("No account found.");
-        }
-
-    } catch (error) {
-        clearFields();
-        alert("Error: " + error.message);
-    } finally {
-    document.getElementById("loadingContainer").style.display = "none";
-}
-}
-
-
-        // Submit Button Click - Send Data to Logic App
-        document.getElementById("submitButton").addEventListener("click", async () => {
-            const payload = {
-                givenName: document.getElementById("givenName").value,
-                sponsorEmail: document.getElementById("sponsorEmail").value,
-                sponsorUserId: document.getElementById("sponsorUserId").value,
-                externalUserEmail: document.getElementById("externalUserEmail").value,
-                lastName: document.getElementById("lastName").value,
-                company: document.getElementById("company").value,
-                phoneNumber: document.getElementById("phoneNumber").value,
-                usageLocation: document.getElementById("usageLocation").value
-            };
+            document.getElementById("loadingContainer").style.display = "flex";
+            document.getElementById("verifySpinner").style.display = "inline-block";
 
             try {
-                const response = await fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", {
+                const response = await fetch("/searchUserByEmail", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ email: sponsorEmail })
                 });
 
-                if (response.ok) {
-                    alert("Form submitted successfully!");
+                if (response.status === 404) {
+                    document.getElementById("sponsorUserId").value = "";
+                    showMessage("No account found with that email.", "error");
+                    return;
+                }
+
+                if (!response.ok) throw new Error("Error fetching user data");
+
+                const data = await response.json();
+
+                if (data.userId) {
+                    document.getElementById("sponsorUserId").value = data.userId;
+                    showMessage("Sponsor account found and User ID populated.", "success");
                 } else {
-                    alert("Failed to submit form.");
+                    showMessage("No account found with that email.", "error");
+                }
+
+            } catch (error) {
+                document.getElementById("sponsorUserId").value = "";
+                showMessage("Error: " + error.message, "error");
+            } finally {
+                document.getElementById("loadingContainer").style.display = "none";
+                document.getElementById("verifySpinner").style.display = "none";
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageElement = document.getElementById("sponsorMessage");
+            messageElement.style.display = "block";
+            messageElement.textContent = message;
+            messageElement.className = "message " + type;
+        }
+
+        // Verify External User Button Click - Checks Entra ID for Existing User
+        async function verifyUser() {
+            const email = document.getElementById("externalUserEmail").value;
+            if (!email) {
+                alert("Please enter an email to verify.");
+                return;
+            }
+
+            document.getElementById("loadingContainer").style.display = "flex";
+            try {
+                const response = await fetch("/searchUserByEmail", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                if (response.status === 404) {
+                    showMessage("No account found with that email.", "error");
+                    return;
+                }
+
+                if (!response.ok) throw new Error("Error fetching user data");
+
+                const data = await response.json();
+                if (data) {
+                    showMessage("User found and details populated.", "success");
+                } else {
+                    showMessage("No account found with that email.", "error");
                 }
             } catch (error) {
-                console.error("Error:", error);
-                alert("Error submitting form.");
+                showMessage("Error: " + error.message, "error");
+            } finally {
+                document.getElementById("loadingContainer").style.display = "none";
             }
-        });
+        }
     </script>
 </body>
 </html>
