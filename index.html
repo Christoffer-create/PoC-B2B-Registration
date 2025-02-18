@@ -309,7 +309,7 @@ async function verifyUser() {
                     body: JSON.stringify(payload)
                 });
 
-                if (response.status === 203) {
+                if (response.status === 204) {
                 alert(`✅ Account Created Successfully!  
                \n👤 Name: ${data.givenName} ${data.lastName}  
                \n📧 Email: ${data.externalUserEmail}  
