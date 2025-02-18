@@ -296,6 +296,7 @@ async function verifyUser() {
                 externalUserEmail: document.getElementById("externalUserEmail").value,
                 lastName: document.getElementById("lastName").value,
                 company: document.getElementById("company").value,
+                phoneNumber: document.getElementById("phoneNumber").value
                 phoneNumber: document.getElementById("phoneNumber").value,
                 usageLocation: document.getElementById("usageLocation").value
             };
@@ -311,20 +312,12 @@ async function verifyUser() {
 
                 if (response.ok) {
                     alert("Form submitted successfully!");
-                if (response.status === 203) {
-                alert(`✅ Account Created Successfully!  
-               \n👤 Name: ${data.givenName} ${data.lastName}  
-               \n📧 Email: ${data.externalUserEmail}  
-               \n🏢 Company: ${data.company}  
-               \n📞 Phone: ${data.phoneNumber}  
-               \n🌍 Country: ${data.usageLocation}`);
                 } else {
                     alert("Failed to submit form.");
                 }
             } catch (error) {
                 console.error("Error:", error);
                 alert("Error submitting form.");
-                alert("❌ Error creating account. Please try again.");
             }
         });
     </script>
