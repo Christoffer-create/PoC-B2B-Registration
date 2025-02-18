@@ -140,6 +140,10 @@
     color: #888;
     border: none;
 }
+        #externalUserVerifySpinner {
+    display: none; /* Hidden by default, shown when verifying */
+    margin-left: 10px; /* Space between the button and spinner */
+}
 
     </style>
 </head>
@@ -184,15 +188,16 @@
         <div class="section-title">B2B Account Information</div>
         <div class="table-container">
             <table>
-                <tr>
-                    <td><label for="externalUserEmail"><strong>External User Email:</strong></label></td>
-                </tr>
-                <tr>
-                    <td class="button-container">
-                        <input type="email" id="externalUserEmail" required>
-                        <button class="button" onclick="verifyUser()">Verify</button>
-                    </td>
-                </tr>
+            <tr>
+            <td><strong>External User Email:</strong></td>
+            </tr>
+            <tr>
+                <td class="button-container">
+                    <input type="email" id="externalUserEmail" required>
+            <button class="button" onclick="verifyExternalUser()">Verify</button>
+            <span id="externalUserVerifySpinner" class="spinner" style="display: none;"></span>
+            </td>
+            </tr>
                 <tr>
                     <td><strong>First name:</strong></td>
                 </tr>
@@ -322,44 +327,70 @@
             messageElement.className = "message " + type;
         }
 
-        // Verify External User Button Click - Checks Entra ID for Existing User
-        async function verifyUser() {
-            const email = document.getElementById("externalUserEmail").value;
-            if (!email) {
-                alert("Please enter an email to verify.");
-                return;
-            }
+// Verify External User Button Click
+async function verifyExternalUser() {
+    const email = document.getElementById("externalUserEmail").value;
+    const spinner = document.getElementById("externalUserVerifySpinner");
 
-            document.getElementById("loadingContainer").style.display = "flex";
-            try {
-                const response = await fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ email })
-                });
+    // Check if the email is empty
+    if (!email) {
+        alert("Please enter an email to verify.");
+        return;
+    }
 
-                if (response.status === 404) {
-                    showMessage("No account found with that email.", "error");
-                    return;
-                }
+    // Show the spinner
+    spinner.style.display = "inline-block";
 
-                if (!response.ok) throw new Error("Error fetching user data");
+    try {
+        const response = await fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email })
+        });
 
-                const data = await response.json();
-                if (data) {
-                    showMessage("User found and details populated.", "success");
-                } else {
-                    showMessage("No account found with that email.", "error");
-                }
-            } catch (error) {
-                showMessage("Error: " + error.message, "error");
-            } finally {
-                document.getElementById("loadingContainer").style.display = "none";
-            }
+        // Hide the spinner once the response is received
+        spinner.style.display = "none";
+
+        if (response.status === 404) {
+            clearExternalUserFields();
+            alert("No account found.");
+            return;
         }
 
+        if (!response.ok) throw new Error("User not found");
+
+        const data = await response.json();
+
+        // Populate the form if the data is available
+        if (data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
+            document.getElementById("lastName").value = data.lastName || "";
+            document.getElementById("company").value = data.company || "";
+            document.getElementById("phoneNumber").value = data.phoneNumber || "";
+            document.getElementById("givenName").value = data.givenName || "";
+            document.getElementById("usageLocation").value = data.usageLocation || "";
+            alert("An account with the given email exists!");
+        } else {
+            alert("No account found.");
+        }
+
+    } catch (error) {
+        // Hide the spinner in case of error
+        spinner.style.display = "none";
+        clearExternalUserFields();
+        alert("Error: " + error.message);
+    }
+}
+
+// Function to clear external user fields in case no account is found
+function clearExternalUserFields() {
+    document.getElementById("givenName").value = "";
+    document.getElementById("lastName").value = "";
+    document.getElementById("company").value = "";
+    document.getElementById("phoneNumber").value = "";
+    document.getElementById("usageLocation").value = "";
+}
         // This function checks the sponsor email and enables/disables the Verify button.
 function checkSponsorEmail() {
     const sponsorEmail = document.getElementById("sponsorEmail").value;
