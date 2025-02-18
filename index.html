@@ -144,6 +144,13 @@
     display: none; /* Hidden by default, shown when verifying */
     margin-left: 10px; /* Space between the button and spinner */
 }
+        #userFoundMessage {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
 
     </style>
 </head>
@@ -187,6 +194,9 @@
         <!-- B2B Account Information Section -->
         <div class="section-title">B2B Account Information</div>
         <div class="table-container">
+            <div id="userFoundMessage" style="display: none; color: green; font-weight: bold; margin-bottom: 10px;">
+    User found and details populated.
+</div>
             <table>
             <tr>
             <td><strong>External User Email:</strong></td>
