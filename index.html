@@ -320,7 +320,7 @@
 
             if (response.ok) {
                 const data = await response.json();
-                document.getElementById("sponsorUserId").value = data.userId || "";
+                document.getElementById("sponsorUserId").value = data.sponsorUserId || "";
                 messageDiv.textContent = "Sponsor verified successfully!";
                 messageDiv.classList.add("success");
                 messageDiv.style.display = "block";
