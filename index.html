@@ -308,22 +308,18 @@ async function verifyUser() {
                     },
                     body: JSON.stringify(payload)
                 });
+                
+console.log("Raw Response:", response);
 
-                if (response.status === 204) {
-                alert(`✅ Account Created Successfully!  
-               \n👤 Name: ${data.givenName} ${data.lastName}  
-               \n📧 Email: ${data.externalUserEmail}  
-               \n🏢 Company: ${data.company}  
-               \n📞 Phone: ${data.phoneNumber}  
-               \n🌍 Country: ${data.usageLocation}`);
-                } else {
-                    alert("Failed to submit form.");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("❌ Error creating account. Please try again.");
-            }
-        });
+const responseText = await response.text(); // Read response as text first
+console.log("Response Text:", responseText);
+
+try {
+    const data = JSON.parse(responseText); // Convert to JSON
+    console.log("Parsed Data:", data);
+} catch (error) {
+    console.error("JSON Parse Error:", error.message);
+}
     </script>
 </body>
 </html>
