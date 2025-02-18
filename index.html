@@ -52,12 +52,12 @@
 
         input,
         select {
-            width: 100%;
+            width: 100%; /* Ensures it matches the input fields */
             padding: 8px;
-            margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            box-sizing: border-box; /* Prevents unwanted shrinking */
         }
 
         .button-container {
@@ -158,6 +158,16 @@
             margin-bottom: 10px;
             font-size: 16px;
         }
+
+        .full-width-button {
+        width: 100%;
+        margin-top: 10px;
+        display: block;
+        text-align: center;
+        }
+
+        
+
     </style>
 </head>
 
