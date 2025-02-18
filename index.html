@@ -191,7 +191,7 @@
                 </tr>
                 <tr>
                     <td class="button-container">
-                        <input type="email" id="sponsorEmail" required>
+                        <input type="email" id="sponsorEmail" required oninput="toggleVerifySponsorButton()">  
                         <button id="verifySponsorButton" class="button" onclick="verifySponsor()">Verify</button>
                         <span id="verifySpinner" class="spinner" style="display: none;"></span>
                     </td>
@@ -441,6 +441,15 @@
             formMessage.classList.add("error");
             formMessage.style.display = "block";
         }
+    function toggleVerifySponsorButton() {
+    const emailField = document.getElementById("sponsorEmail");
+    const verifyButton = document.getElementById("verifySponsorButton");
+
+    // Disable the button if the email field is empty OR contains "#EXT#"
+    verifyButton.disabled = emailField.value.trim() === "" || emailField.value.includes("#EXT#");
+}
+
+        
     }
 </script>
 
