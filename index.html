@@ -127,7 +127,7 @@
     </div>
     <div class="container">
         <h1>B2B Account Creation</h1>
-        
+
         <!-- Sponsor Details Section -->
         <div class="section-title">Sponsor Details</div>
         <div class="table-container">
@@ -202,7 +202,7 @@
 </tr>
             </table>
         </div>
-        
+
         <button class="button full-width-button" id="submitButton">Submit</button>
     </div>
 
@@ -232,6 +232,7 @@
         });
 
         function clearFields() {
+    document.getElementById("givenName").value = "";
     document.getElementById("lastName").value = "";
     document.getElementById("company").value = "";
     document.getElementById("phoneNumber").value = "";
@@ -261,11 +262,11 @@ async function verifyUser() {
             alert("No account found.");
             return;
         }
-        
+
         if (!response.ok) throw new Error("User not found");
 
         const data = await response.json();
-        
+
         if (data.lastName || data.company || data.phoneNumber || data.givenName || data.usageLocation) {
             document.getElementById("lastName").value = data.lastName || "";
             document.getElementById("company").value = data.company || "";
@@ -307,19 +308,25 @@ async function verifyUser() {
                     },
                     body: JSON.stringify(payload)
                 });
-                
-console.log("Raw Response:", response);
 
-const responseText = await response.text(); // Read response as text first
-console.log("Response Text:", responseText);
-
-try {
-    const data = JSON.parse(responseText); // Convert to JSON
-    console.log("Parsed Data:", data);
-} catch (error) {
-    console.error("JSON Parse Error:", error.message);
-}
-});
-</script>
+                if (response.ok) {
+                    alert("Form submitted successfully!");
+                if (response.status === 203) {
+                alert(`✅ Account Created Successfully!  
+               \n👤 Name: ${data.givenName} ${data.lastName}  
+               \n📧 Email: ${data.externalUserEmail}  
+               \n🏢 Company: ${data.company}  
+               \n📞 Phone: ${data.phoneNumber}  
+               \n🌍 Country: ${data.usageLocation}`);
+                } else {
+                    alert("Failed to submit form.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error submitting form.");
+                alert("❌ Error creating account. Please try again.");
+            }
+        });
+    </script>
 </body>
 </html>
