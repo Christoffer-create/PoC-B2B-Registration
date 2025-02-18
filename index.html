@@ -135,6 +135,12 @@
     border: 2px solid #ccc; /* Add a light border for visibility */
 }
 
+        #verifySponsorButton:disabled {
+    background-color: #ccc;
+    color: #888;
+    border: none;
+}
+
     </style>
 </head>
 <body>
@@ -157,11 +163,12 @@
                     <td><label for="sponsorEmail"><strong>Sponsor Email:</strong></label></td>
                 </tr>
                 <tr>
-                    <td class="button-container">
-                        <input type="email" id="sponsorEmail" required>
-                        <button class="button" onclick="verifySponsor()">Verify</button>
-                        <span id="verifySpinner" class="spinner" style="display: none;"></span>
-                    </td>
+            <td class="button-container">
+            <input type="email" id="sponsorEmail" required>
+            <button id="verifySponsorButton" class="button" onclick="verifySponsor()">Verify</button>
+            <span id="verifySpinner" class="spinner" style="display: none;"></span>
+                </td>
+
                 </tr>
                 <tr>
                     <td><strong>Sponsor User ID:</strong></td>
@@ -352,6 +359,29 @@
                 document.getElementById("loadingContainer").style.display = "none";
             }
         }
+
+        // This function checks the sponsor email and enables/disables the Verify button.
+function checkSponsorEmail() {
+    const sponsorEmail = document.getElementById("sponsorEmail").value;
+    const verifyButton = document.getElementById("verifySponsorButton"); // The verify button for sponsor email
+
+    // Check if the sponsor email contains "#EXT#" and disable the button if true
+    if (sponsorEmail.includes("#EXT#")) {
+        verifyButton.disabled = true;  // Disable button
+        verifyButton.style.cursor = "not-allowed"; // Change cursor to indicate it's not clickable
+    } else {
+        verifyButton.disabled = false; // Enable button
+        verifyButton.style.cursor = "pointer"; // Change cursor to clickable
+    }
+}
+
+// Call this function when the sponsor email input value changes
+document.getElementById("sponsorEmail").addEventListener("input", checkSponsorEmail);
+
+// Call it once when the page loads to set the initial state of the button
+document.addEventListener("DOMContentLoaded", checkSponsorEmail);
+
+        
     </script>
 </body>
 </html>
