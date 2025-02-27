@@ -1,224 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>External User Registration</title>
+    <title>B2B External User Registration</title>
     <style>
-        .message {
-            display: none;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-align: center;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .success { background-color: #d4edda; color: #155724; }
-        .error { background-color: #f8d7da; color: #721c24; }
-        .button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-        .full-width-button { width: 100%; }
-        .table-container { display: flex; justify-content: center; }
-        table { width: 50%; border-collapse: collapse; }
-        td { padding: 10px; }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #143275;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            background-color: #143275;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background-color: #143275;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .button:hover {
+            background-color: #0f255a;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #143275;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
+
 <body>
-    <h2>External User Registration</h2>
-    
-    <div class="table-container">
-        <table border="1">
-            <tr>
-                <td>Sponsor Email:</td>
-                <td>
-                    <input type="email" id="sponsorEmail">
-                    <button id="verifySponsorButton" onclick="verifySponsor()">Verify</button>
-                    <span id="verifySpinner" style="display: none;">🔄</span>
-                    <input type="hidden" id="sponsorUserId"> <!-- HIDDEN FIELD -->
-                    <div id="sponsorMessage" class="message"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>External User Email:</td>
-                <td>
-                    <input type="email" id="externalUserEmail">
-                    <button onclick="verifyExternalUser()">Check</button>
-                    <span id="externalUserVerifySpinner" style="display: none;">🔄</span>
-                    <div id="userFoundMessage" class="message"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>Given Name:</td>
-                <td><input type="text" id="givenName"></td>
-            </tr>
-            <tr>
-                <td>Last Name:</td>
-                <td><input type="text" id="lastName"></td>
-            </tr>
-            <tr>
-                <td>Company:</td>
-                <td><input type="text" id="company"></td>
-            </tr>
-            <tr>
-                <td>Phone Number:</td>
-                <td><input type="text" id="phoneNumber"></td>
-            </tr>
-            <tr>
-                <td>Usage Location:</td>
-                <td><input type="text" id="usageLocation"></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: center;">
-                    <button class="button full-width-button" id="submitButton" onclick="submitForm()" disabled>Submit</button>
-                </td>
-            </tr>
-        </table>
+
+    <div class="container">
+        <h1 class="title">External User Registration</h1>
+
+        <!-- Sponsor Details -->
+        <div class="section-title">Sponsor Details</div>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td><strong>Sponsor Email:</strong></td>
+                </tr>
+                <tr>
+                    <td class="button-container">
+                        <input type="email" id="sponsorEmail" required oninput="resetMessages()">
+                        <button id="verifySponsorButton" class="button" onclick="verifySponsor()">Verify</button>
+                        <div id="verifySpinner" class="spinner"></div>
+                    </td>
+                </tr>
+            </table>
+            <div id="sponsorMessage" class="message"></div>
+        </div>
+
+        <!-- External User Details -->
+        <div class="section-title">User Information</div>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td><strong>External User Email:</strong></td>
+                </tr>
+                <tr>
+                    <td class="button-container">
+                        <input type="email" id="externalUserEmail" required oninput="resetMessages()">
+                        <button class="button" onclick="verifyExternalUser()">Verify</button>
+                        <div id="externalUserVerifySpinner" class="spinner"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>First Name:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="givenName" required></td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name:</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="lastName" required></td>
+                </tr>
+            </table>
+        </div>
+
+        <button id="submitButton" class="button" onclick="submitForm()" disabled>Submit</button>
+        <div id="formMessage" class="message"></div>
     </div>
 
     <script>
+        let sponsorVerified = false;
+        let externalUserValid = false;
+
         function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = "message " + (type === "success" ? "success" : "error");
-            element.style.display = "block";
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = "block";
         }
 
         function resetMessages() {
-            document.querySelectorAll(".message").forEach(msg => {
-                msg.textContent = "";
-                msg.style.display = "none";
-            });
+            document.querySelectorAll(".message").forEach(msg => msg.style.display = "none");
         }
 
-        function disableSubmitButton() {
-            document.getElementById("submitButton").disabled = true;
-            document.getElementById("submitButton").style.backgroundColor = "#ccc";
-        }
-
-        function enableSubmitButton() {
-            document.getElementById("submitButton").disabled = false;
-            document.getElementById("submitButton").style.backgroundColor = "#143275";
+        function toggleSubmitButton() {
+            document.getElementById("submitButton").disabled = !(sponsorVerified && externalUserValid);
         }
 
         async function verifySponsor() {
-            resetMessages();  // Clear old messages
+            resetMessages();
+            document.getElementById("verifySpinner").style.display = "inline-block";
 
-            const sponsorEmail = document.getElementById("sponsorEmail").value;
-            const verifyButton = document.getElementById("verifySponsorButton");
-            const spinner = document.getElementById("verifySpinner");
+            let email = document.getElementById("sponsorEmail").value;
+            let response = await fetch(`https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc`);
+            let result = await response.json();
 
-            if (!sponsorEmail) {
-                showMessage("sponsorMessage", "Please enter a sponsor email.", "error");
-                return;
+            document.getElementById("verifySpinner").style.display = "none";
+
+            if (result.success) {
+                showMessage("sponsorMessage", "Sponsor verified successfully!", "success");
+                sponsorVerified = true;
+            } else {
+                showMessage("sponsorMessage", "Sponsor not found.", "error");
+                sponsorVerified = false;
             }
-
-            verifyButton.disabled = true;
-            spinner.style.display = "inline-block";
-
-            try {
-                const response = await fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', { 
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: sponsorEmail })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById("sponsorUserId").value = data.sponsorUserId || "";
-                    showMessage("sponsorMessage", "Sponsor verified successfully!", "success");
-                    enableSubmitButton();
-                } else {
-                    showMessage("sponsorMessage", "Sponsor not found.", "error");
-                    document.getElementById("sponsorUserId").value = "";
-                    disableSubmitButton();
-                }
-            } catch (error) {
-                showMessage("sponsorMessage", "Error verifying sponsor.", "error");
-                disableSubmitButton();
-            } finally {
-                verifyButton.disabled = false;
-                spinner.style.display = "none";
-            }
+            toggleSubmitButton();
         }
 
         async function verifyExternalUser() {
             resetMessages();
+            document.getElementById("externalUserVerifySpinner").style.display = "inline-block";
 
-            const externalUserEmail = document.getElementById("externalUserEmail").value;
-            const spinner = document.getElementById("externalUserVerifySpinner");
+            let email = document.getElementById("externalUserEmail").value;
+            let response = await fetch(`https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk`);
+            let result = await response.json();
 
-            if (!externalUserEmail) {
-                showMessage("userFoundMessage", "Please enter an external user email.", "error");
-                return;
+            document.getElementById("externalUserVerifySpinner").style.display = "none";
+
+            if (result.exists) {
+                showMessage("formMessage", "User already exists.", "error");
+                externalUserValid = false;
+            } else {
+                showMessage("formMessage", "User verified.", "success");
+                externalUserValid = true;
             }
-
-            spinner.style.display = "inline-block";
-
-            try {
-                const response = await fetch('https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk', { 
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: externalUserEmail })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById("givenName").value = data.givenName || "";
-                    document.getElementById("lastName").value = data.lastName || "";
-                    document.getElementById("company").value = data.company || "";
-                    document.getElementById("phoneNumber").value = data.phoneNumber || "";
-                    document.getElementById("usageLocation").value = data.usageLocation || "";
-
-                    showMessage("userFoundMessage", "User found and details populated.", "success");
-                    disableSubmitButton(); // Prevent submission if user exists
-                } else {
-                    showMessage("userFoundMessage", "User not found, ready to register.", "success");
-                    enableSubmitButton();
-                }
-            } catch (error) {
-                showMessage("userFoundMessage", "Error verifying user.", "error");
-                disableSubmitButton();
-            } finally {
-                spinner.style.display = "none";
-            }
+            toggleSubmitButton();
         }
 
-async function submitForm() {
-    resetMessages(); // Clear previous messages
-
-    const submitButton = document.getElementById("submitButton");
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting...";
-
-    // Collect form data
-    const formData = {
-        sponsorUserId: document.getElementById("sponsorUserId").value,
-        sponsorEmail: document.getElementById("sponsorEmail").value,
-        externalUserEmail: document.getElementById("externalUserEmail").value,
-        givenName: document.getElementById("givenName").value,
-        lastName: document.getElementById("lastName").value,
-        company: document.getElementById("company").value,
-        phoneNumber: document.getElementById("phoneNumber").value,
-        usageLocation: document.getElementById("usageLocation").value
-    };
-
-    try {
-        const response = await fetch('https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s', {  // Replace '' with your API endpoint
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            showMessage("userFoundMessage", "User registered successfully!", "success");
-        } else {
-            showMessage("userFoundMessage", "Failed to register user.", "error");
+        async function submitForm() {
+            showMessage("formMessage", "Submitting form...", "success");
+            await fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", { method: "POST" });
+            showMessage("formMessage", "User registered successfully!", "success");
         }
-    } catch (error) {
-        showMessage("userFoundMessage", "Network error. Please try again.", "error");
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = "Submit";
-    }
-}
-
     </script>
+
 </body>
 </html>
