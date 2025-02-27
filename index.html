@@ -9,107 +9,134 @@
             font-family: Arial, sans-serif;
             background-color: #143275;
             color: white;
-            text-align: center;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
         .container {
             background: white;
             color: black;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
             width: 50%;
-            margin: auto;
         }
         table {
             width: 100%;
+            border-collapse: collapse;
         }
-        th, td {
+        td {
             padding: 10px;
         }
-        input, select {
-            width: calc(100% - 50px);
-            padding: 5px;
+        .input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
-        .btn {
-            padding: 5px 10px;
-            cursor: pointer;
+        input, select {
+            width: 75%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 25%;
             background-color: #143275;
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
-        .loading {
-            display: none;
-            font-size: 14px;
-            color: #143275;
+        button:hover {
+            background-color: #0f2759;
         }
     </style>
 </head>
 <body>
-    <h2>External User Registration</h2>
     <div class="container">
+        <h2>External User Registration</h2>
         <table>
             <tr>
-                <td>Sponsor Name</td>
+                <td>Sponsor Name:</td>
                 <td>
-                    <input type="text" id="sponsorName">
-                    <button class="btn" onclick="verifySponsor()">Verify</button>
-                    <span id="sponsorLoading" class="loading">Checking...</span>
+                    <div class="input-container">
+                        <input type="text" id="sponsorName">
+                        <button onclick="verifySponsor()">Verify</button>
+                    </div>
                 </td>
             </tr>
             <tr>
-                <td>External User Email</td>
+                <td>External User Email:</td>
                 <td>
-                    <input type="text" id="externalEmail">
-                    <button class="btn" onclick="verifyExternalUser()">Verify</button>
-                    <span id="externalLoading" class="loading">Checking...</span>
+                    <div class="input-container">
+                        <input type="email" id="externalUserEmail">
+                        <button onclick="verifyExternalUser()">Verify</button>
+                    </div>
                 </td>
             </tr>
-            <tr><td>First Name</td><td><input type="text" id="firstName"></td></tr>
-            <tr><td>Last Name</td><td><input type="text" id="lastName"></td></tr>
-            <tr><td>Phone Number</td><td><input type="text" id="phoneNumber"></td></tr>
-            <tr><td>Company</td><td><input type="text" id="company"></td></tr>
+            <tr><td>First Name:</td><td><input type="text" id="firstName"></td></tr>
+            <tr><td>Last Name:</td><td><input type="text" id="lastName"></td></tr>
+            <tr><td>Phone Number:</td><td><input type="text" id="phoneNumber"></td></tr>
+            <tr><td>Company:</td><td><input type="text" id="company"></td></tr>
             <tr>
-                <td>Usage Location</td>
+                <td>Usage Location:</td>
                 <td>
                     <select id="usageLocation">
                         <option value="US">United States</option>
-                        <option value="UK">United Kingdom</option>
+                        <option value="CA">Canada</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="AU">Australia</option>
                         <option value="DE">Germany</option>
-                        <option value="SE">Sweden</option>
-                        <option value="IN">India</option>
-                        <option value="CN">China</option>
+                        <option value="FR">France</option>
                     </select>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button onclick="submitForm()">Submit</button>
+                </td>
+            </tr>
         </table>
-        <button class="btn" onclick="submitForm()" id="submitBtn" disabled>Submit</button>
-        <span id="submitLoading" class="loading">Submitting...</span>
     </div>
 
     <script>
         function verifySponsor() {
-            document.getElementById("sponsorLoading").style.display = "inline";
-            setTimeout(() => {
-                document.getElementById("sponsorLoading").style.display = "none";
-                document.getElementById("submitBtn").disabled = false;
-            }, 2000);
+            let sponsorName = document.getElementById("sponsorName").value;
+            if (!sponsorName) {
+                alert("Please enter a sponsor name to verify.");
+                return;
+            }
+            console.log("Verifying sponsor: " + sponsorName);
         }
 
         function verifyExternalUser() {
-            document.getElementById("externalLoading").style.display = "inline";
-            setTimeout(() => {
-                document.getElementById("externalLoading").style.display = "none";
-                document.getElementById("submitBtn").disabled = false;
-            }, 2000);
+            let email = document.getElementById("externalUserEmail").value;
+            if (!email) {
+                alert("Please enter an email to verify.");
+                return;
+            }
+            console.log("Verifying external user email: " + email);
         }
 
         function submitForm() {
-            document.getElementById("submitLoading").style.display = "inline";
-            setTimeout(() => {
-                document.getElementById("submitLoading").style.display = "none";
-                alert("Form submitted successfully!");
-            }, 2000);
+            let sponsorName = document.getElementById("sponsorName").value;
+            let email = document.getElementById("externalUserEmail").value;
+            let firstName = document.getElementById("firstName").value;
+            let lastName = document.getElementById("lastName").value;
+            let phoneNumber = document.getElementById("phoneNumber").value;
+            let company = document.getElementById("company").value;
+            let usageLocation = document.getElementById("usageLocation").value;
+            
+            if (!sponsorName || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation) {
+                alert("Please fill in all fields before submitting.");
+                return;
+            }
+            console.log("Submitting form with data:", { sponsorName, email, firstName, lastName, phoneNumber, company, usageLocation });
         }
     </script>
 </body>
