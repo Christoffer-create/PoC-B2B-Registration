@@ -127,105 +127,108 @@
         <input type="hidden" id="sponsorId" name="sponsorId">
     </div>
 
-    <script>
-        let debounceTimeout;
+<script>
+    let debounceTimeout;
 
-        function debounce(func, delay) {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(func, delay);
+    function debounce(func, delay) {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(func, delay);
+    }
+
+    function verifySponsor() {
+        let sponsorEmail = document.getElementById("sponsorEmail").value;
+        let sponsorStatus = document.getElementById("sponsorStatus");
+        let sponsorIdField = document.getElementById("sponsorId");
+        if (!sponsorEmail) {
+            sponsorStatus.innerHTML = "";
+            sponsorIdField.value = "";
+            return;
         }
-
-        function verifySponsor() {
-            let sponsorEmail = document.getElementById("sponsorEmail").value;
-            let sponsorStatus = document.getElementById("sponsorStatus");
-            let sponsorIdField = document.getElementById("sponsorId");
-            if (!sponsorEmail) {
-                sponsorStatus.innerHTML = "";
+        sponsorStatus.innerHTML = '<div class="loading"></div>';
+        
+        // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
+        fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: sponsorEmail })
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (response.status === 200) {
+                sponsorStatus.innerHTML = '✅'; // Green check mark emoji
+                return response.json();
+            } else if (response.status === 403) {
+                sponsorStatus.innerHTML = '❌'; // Red X mark emoji
                 sponsorIdField.value = "";
-                return;
-            }
-            sponsorStatus.innerHTML = '<div class="loading"></div>';
-            
-            // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
-            fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: sponsorEmail })
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    sponsorStatus.innerHTML = '✅'; // Green check mark emoji
-                    return response.json();
-                } else if (response.status === 403) {
-                    sponsorStatus.innerHTML = '❌'; // Red X mark emoji
-                    sponsorIdField.value = "";
-                    throw new Error('Forbidden');
-                } else {
-                    sponsorStatus.innerHTML = '❓'; // Question mark for other statuses
-                    sponsorIdField.value = "";
-                    throw new Error('Unexpected status');
-                }
-            })
-            .then(data => {
-                sponsorIdField.value = data.sponsorId; // Assuming the response contains sponsorId
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                sponsorStatus.innerHTML = '❌'; // Red X mark emoji for errors
+                throw new Error('Forbidden');
+            } else {
+                sponsorStatus.innerHTML = '❓'; // Question mark for other statuses
                 sponsorIdField.value = "";
-            });
-        }
-
-        function verifyExternalUser() {
-            let email = document.getElementById("externalUserEmail").value;
-            let externalUserStatus = document.getElementById("externalUserStatus");
-            if (!email) {
-                externalUserStatus.innerHTML = "";
-                return;
+                throw new Error('Unexpected status');
             }
-            externalUserStatus.innerHTML = '<div class="loading"></div>';
-            
-            // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
-            fetch('YOUR_LOGIC_APP_URL', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email })
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    externalUserStatus.innerHTML = '✅'; // Green check mark emoji
-                } else if (response.status === 403) {
-                    externalUserStatus.innerHTML = '❌'; // Red X mark emoji
-                } else {
-                    externalUserStatus.innerHTML = '❓'; // Question mark for other statuses
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                externalUserStatus.innerHTML = '❌'; // Red X mark emoji for errors
-            });
-        }
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            sponsorIdField.value = data.sponsorId; // Assuming the response contains sponsorId
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            sponsorStatus.innerHTML = '❌'; // Red X mark emoji for errors
+            sponsorIdField.value = "";
+        });
+    }
 
-        function submitForm() {
-            let sponsorEmail = document.getElementById("sponsorEmail").value;
-            let email = document.getElementById("externalUserEmail").value;
-            let firstName = document.getElementById("firstName").value;
-            let lastName = document.getElementById("lastName").value;
-            let phoneNumber = document.getElementById("phoneNumber").value;
-            let company = document.getElementById("company").value;
-            let usageLocation = document.getElementById("usageLocation").value;
-            let sponsorId = document.getElementById("sponsorId").value;
-            
-            if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
-                alert("Please fill in all fields before submitting.");
-                return;
-            }
-            console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
+    function verifyExternalUser() {
+        let email = document.getElementById("externalUserEmail").value;
+        let externalUserStatus = document.getElementById("externalUserStatus");
+        if (!email) {
+            externalUserStatus.innerHTML = "";
+            return;
         }
-    </script>
+        externalUserStatus.innerHTML = '<div class="loading"></div>';
+        
+        // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
+        fetch('YOUR_LOGIC_APP_URL', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (response.status === 200) {
+                externalUserStatus.innerHTML = '✅'; // Green check mark emoji
+            } else if (response.status === 403) {
+                externalUserStatus.innerHTML = '❌'; // Red X mark emoji
+            } else {
+                externalUserStatus.innerHTML = '❓'; // Question mark for other statuses
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            externalUserStatus.innerHTML = '❌'; // Red X mark emoji for errors
+        });
+    }
+
+    function submitForm() {
+        let sponsorEmail = document.getElementById("sponsorEmail").value;
+        let email = document.getElementById("externalUserEmail").value;
+        let firstName = document.getElementById("firstName").value;
+        let lastName = document.getElementById("lastName").value;
+        let phoneNumber = document.getElementById("phoneNumber").value;
+        let company = document.getElementById("company").value;
+        let usageLocation = document.getElementById("usageLocation").value;
+        let sponsorId = document.getElementById("sponsorId").value;
+        
+        if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
+            alert("Please fill in all fields before submitting.");
+            return;
+        }
+        console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
+    }
+</script>
 </body>
 </html>
