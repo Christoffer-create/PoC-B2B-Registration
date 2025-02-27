@@ -10,45 +10,55 @@
             background-color: #143275;
             color: white;
             text-align: center;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
         }
         .container {
-            background: white;
+            width: 50%;
+            margin: 20px auto;
+            background-color: white;
             color: black;
             padding: 20px;
             border-radius: 10px;
-            width: 60%;
-            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+        td {
             padding: 10px;
-            text-align: left;
         }
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
         button {
             background-color: #143275;
             color: white;
+            padding: 10px;
             border: none;
-            padding: 8px 15px;
+            border-radius: 5px;
             cursor: pointer;
+        }
+        .verify-btn {
+            width: 50%;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
             border-radius: 5px;
         }
-        button:disabled {
-            background-color: gray;
-            cursor: not-allowed;
+        .success {
+            background-color: #4CAF50;
+            color: white;
         }
-        select, input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
+        .error {
+            background-color: #f44336;
+            color: white;
         }
     </style>
 </head>
@@ -59,25 +69,21 @@
             <tr>
                 <td>Sponsor Name:</td>
                 <td>
-                    <div class="input-group">
-                        <input type="text" id="sponsorName">
-                        <button onclick="verifySponsor()">Verify</button>
-                    </div>
+                    <input type="text" id="sponsorName">
+                    <button class="verify-btn" onclick="verifySponsor()">Verify Sponsor</button>
                 </td>
             </tr>
             <tr>
                 <td>External User Email:</td>
                 <td>
-                    <div class="input-group">
-                        <input type="email" id="externalEmail">
-                        <button onclick="verifyExternalUser()">Verify</button>
-                    </div>
+                    <input type="email" id="externalUserEmail">
+                    <button class="verify-btn" onclick="verifyExternalUser()">Verify User</button>
                 </td>
             </tr>
-            <tr>
-                <td>Phone Number:</td>
-                <td><input type="text" id="phoneNumber"></td>
-            </tr>
+            <tr><td>First Name:</td><td><input type="text" id="firstName"></td></tr>
+            <tr><td>Last Name:</td><td><input type="text" id="lastName"></td></tr>
+            <tr><td>Phone Number:</td><td><input type="text" id="phoneNumber"></td></tr>
+            <tr><td>Company:</td><td><input type="text" id="company"></td></tr>
             <tr>
                 <td>Usage Location:</td>
                 <td>
@@ -87,89 +93,78 @@
                         <option value="CA">Canada</option>
                         <option value="DE">Germany</option>
                         <option value="FR">France</option>
-                        <option value="IN">India</option>
-                        <option value="AU">Australia</option>
                         <option value="SE">Sweden</option>
-                        <option value="NO">Norway</option>
-                        <option value="DK">Denmark</option>
-                        <option value="FI">Finland</option>
                     </select>
                 </td>
             </tr>
         </table>
-        <br>
-        <button id="submitBtn" onclick="submitForm()" disabled>Submit Form</button>
+        <button id="submitButton" onclick="submitForm()" disabled>Submit Form</button>
+        <div id="messageContainer" class="message"></div>
     </div>
-    
+
     <script>
         function verifySponsor() {
             const sponsorName = document.getElementById("sponsorName").value;
-            if (!sponsorName) {
-                alert("Please enter a sponsor name");
-                return;
-            }
-            fetch("https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc", {
+            fetch("SPONSOR_API_URL", {
                 method: "POST",
-                body: JSON.stringify({ sponsor: sponsorName }),
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sponsorName })
             })
             .then(response => response.json())
             .then(data => {
-                if (data.verified) {
-                    alert("Sponsor verified successfully");
-                    checkFormValidity();
-                } else {
-                    alert("Sponsor verification failed");
-                }
-            });
+                showMessage("Sponsor verified successfully!", "success");
+                document.getElementById("submitButton").disabled = false;
+            })
+            .catch(() => showMessage("Error verifying sponsor", "error"));
         }
 
         function verifyExternalUser() {
-            const email = document.getElementById("externalEmail").value;
-            if (!email) {
-                alert("Please enter an email");
-                return;
-            }
-            fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk", {
+            const email = document.getElementById("externalUserEmail").value;
+            fetch("EXTERNAL_USER_API_URL", {
                 method: "POST",
-                body: JSON.stringify({ email: email }),
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.exists) {
-                    alert("User already exists");
+                    showMessage("User already exists!", "error");
+                    document.getElementById("submitButton").disabled = true;
                 } else {
-                    document.getElementById("phoneNumber").value = data.phone || "";
-                    document.getElementById("usageLocation").value = data.location || "US";
-                    alert("User information populated");
-                    checkFormValidity();
+                    document.getElementById("firstName").value = data.firstName;
+                    document.getElementById("lastName").value = data.lastName;
+                    document.getElementById("phoneNumber").value = data.phoneNumber;
+                    document.getElementById("company").value = data.company;
+                    showMessage("User verified successfully!", "success");
+                    document.getElementById("submitButton").disabled = false;
                 }
-            });
-        }
-
-        function checkFormValidity() {
-            const sponsorValid = document.getElementById("sponsorName").value.trim() !== "";
-            const emailValid = document.getElementById("externalEmail").value.trim() !== "";
-            document.getElementById("submitBtn").disabled = !(sponsorValid && emailValid);
+            })
+            .catch(() => showMessage("Error verifying user", "error"));
         }
 
         function submitForm() {
             const formData = {
-                sponsor: document.getElementById("sponsorName").value,
-                email: document.getElementById("externalEmail").value,
-                phone: document.getElementById("phoneNumber").value,
-                location: document.getElementById("usageLocation").value
+                sponsorName: document.getElementById("sponsorName").value,
+                externalUserEmail: document.getElementById("externalUserEmail").value,
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                phoneNumber: document.getElementById("phoneNumber").value,
+                company: document.getElementById("company").value,
+                usageLocation: document.getElementById("usageLocation").value
             };
-            fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", {
+            fetch("SUBMIT_FORM_API_URL", {
                 method: "POST",
-                body: JSON.stringify(formData),
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
             })
-            .then(response => response.json())
-            .then(data => {
-                alert("Form submitted successfully");
-            });
+            .then(() => showMessage("Form submitted successfully!", "success"))
+            .catch(() => showMessage("Error submitting form", "error"));
+        }
+
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById("messageContainer");
+            messageContainer.textContent = message;
+            messageContainer.className = `message ${type}`;
         }
     </script>
 </body>
