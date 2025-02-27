@@ -44,17 +44,17 @@
             border-radius: 4px;
             width: calc(100% - 100px); /* Adjust width to account for button */
         }
-        .button-container {
+        .button-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             position: absolute;
             top: 0;
             right: 0;
             bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             padding: 10px;
         }
-        .button-container button {
+        .button-column button {
             padding: 8px 12px;
             width: 90px; /* Fixed width for button */
             margin-bottom: 10px;
@@ -82,10 +82,6 @@
 <body>
     <div class="container">
         <h2>External User Registration</h2>
-        <div class="button-container">
-            <button onclick="verifySponsor()">Verify Sponsor</button>
-            <button onclick="verifyExternalUser()">Verify Email</button>
-        </div>
         <table>
             <tr>
                 <td>Sponsor Name:</td>
@@ -132,6 +128,10 @@
                 </td>
             </tr>
         </table>
+        <div class="button-column">
+            <button onclick="verifySponsor()">Verify Sponsor</button>
+            <button onclick="verifyExternalUser()">Verify Email</button>
+        </div>
     </div>
 
     <script>
