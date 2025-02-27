@@ -7,15 +7,21 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #143275;
+            color: white;
             margin: 0;
             padding: 20px;
+            text-align: center;
         }
 
         .container {
-            width: 100%;
             max-width: 600px;
             margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            color: black;
         }
 
         .section-title {
@@ -26,22 +32,15 @@
             padding: 10px;
             text-align: center;
             border-radius: 5px 5px 0 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .table-container {
-            background: white;
-            padding: 20px;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            box-sizing: border-box;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            background: white;
+            border-radius: 0 0 5px 5px;
+            padding: 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         td {
@@ -61,7 +60,7 @@
         .button {
             background-color: #143275;
             color: white;
-            padding: 10px 15px;
+            padding: 8px 15px;
             font-size: 14px;
             border: none;
             border-radius: 5px;
@@ -78,12 +77,28 @@
             margin-top: 10px;
         }
 
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .message {
             margin-top: 10px;
             padding: 10px;
             border-radius: 5px;
-            display: none;
             text-align: center;
+            display: none;
         }
 
         .success {
@@ -95,86 +110,138 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+
+        #submitButton:disabled {
+            background-color: #ccc;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1 style="text-align: center;">External User Registration</h1>
+        <h1>External User Registration</h1>
 
+        <!-- Sponsor Details Section -->
         <div class="section-title">Sponsor Details</div>
-        <div class="table-container">
-            <table>
-                <tr><td><strong>Sponsor Email:</strong></td></tr>
-                <tr>
-                    <td>
-                        <input type="email" id="sponsorEmail" required>
-                        <button class="button" onclick="verifySponsor()">Verify</button>
-                    </td>
-                </tr>
-            </table>
-            <div id="sponsorMessage" class="message"></div>
-        </div>
+        <table>
+            <tr>
+                <td><label for="sponsorEmail"><strong>Sponsor Email:</strong></label></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="email" id="sponsorEmail" required>
+                    <button class="button" onclick="verifySponsor()">Verify</button>
+                    <div id="sponsorSpinner" class="spinner"></div>
+                </td>
+            </tr>
+            <input type="hidden" id="sponsorUserId">
+        </table>
+        <div id="sponsorMessage" class="message"></div>
 
+        <!-- External User Details Section -->
         <div class="section-title">B2B Account Information</div>
-        <div class="table-container">
-            <table>
-                <tr><td><strong>External User Email:</strong></td></tr>
-                <tr>
-                    <td>
-                        <input type="email" id="externalUserEmail" required>
-                        <button class="button" onclick="verifyExternalUser()">Verify</button>
-                    </td>
-                </tr>
-                <tr><td><strong>First Name:</strong></td></tr>
-                <tr><td><input type="text" id="givenName" required></td></tr>
-                <tr><td><strong>Last Name:</strong></td></tr>
-                <tr><td><input type="text" id="lastName" required></td></tr>
-                <tr><td><strong>Company:</strong></td></tr>
-                <tr><td><input type="text" id="company" required></td></tr>
-                <tr><td><strong>Phone Number:</strong></td></tr>
-                <tr><td><input type="text" id="phoneNumber" required></td></tr>
-                <tr><td><strong>Country:</strong></td></tr>
-                <tr>
-                    <td>
-                        <select id="usageLocation" required>
-                            <option value="SE">Sweden</option>
-                            <option value="PL">Poland</option>
-                            <option value="NO">Norway</option>
-                            <option value="US">United States</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="HU">Hungary</option>
-                            <option value="CZ">Czech Republic</option>
-                            <option value="SK">Slovakia</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <button class="button full-width-button" id="submitButton" onclick="submitForm()" disabled>Submit</button>
-        <div id="formMessage" class="message"></div>
+        <table>
+            <tr>
+                <td><strong>External User Email:</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="email" id="externalUserEmail" required>
+                    <button class="button" onclick="verifyExternalUser()">Verify</button>
+                    <div id="externalUserSpinner" class="spinner"></div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>First Name:</strong></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="givenName" required></td>
+            </tr>
+            <tr>
+                <td><strong>Last Name:</strong></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="lastName" required></td>
+            </tr>
+            <tr>
+                <td><strong>Company:</strong></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="company" required></td>
+            </tr>
+            <tr>
+                <td><strong>Phone Number:</strong></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="phoneNumber" required></td>
+            </tr>
+            <tr>
+                <td><strong>Country:</strong></td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="usageLocation" required>
+                        <option value="SE">Sweden</option>
+                        <option value="PL">Poland</option>
+                        <option value="NO">Norway</option>
+                        <option value="US">United States</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div id="userMessage" class="message"></div>
+
+        <button id="submitButton" class="button full-width-button" onclick="submitForm()" disabled>Submit</button>
     </div>
 
     <script>
-        function showMessage(elementId, message, isSuccess) {
-            const messageDiv = document.getElementById(elementId);
-            messageDiv.textContent = message;
-            messageDiv.className = `message ${isSuccess ? 'success' : 'error'}`;
-            messageDiv.style.display = "block";
-        }
-        
-        function verifySponsor() {
-            showMessage('sponsorMessage', 'Sponsor verified successfully!', true);
-            document.getElementById('submitButton').disabled = false;
+        function displayMessage(id, text, type) {
+            const message = document.getElementById(id);
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.style.display = "block";
         }
 
-        function verifyExternalUser() {
-            showMessage('formMessage', 'User already exists.', false);
-            document.getElementById('submitButton').disabled = true;
+        async function verifySponsor() {
+            displayMessage("sponsorMessage", "", "");
+            document.getElementById("sponsorSpinner").style.display = "inline-block";
+
+            setTimeout(() => {
+                document.getElementById("sponsorSpinner").style.display = "none";
+                displayMessage("sponsorMessage", "Sponsor verified successfully!", "success");
+                document.getElementById("sponsorUserId").value = "12345";
+                checkFormValidity();
+            }, 1000);
         }
 
-        function submitForm() {
-            showMessage('formMessage', 'Form submitted successfully!', true);
+        async function verifyExternalUser() {
+            displayMessage("userMessage", "", "");
+            document.getElementById("externalUserSpinner").style.display = "inline-block";
+
+            setTimeout(() => {
+                document.getElementById("externalUserSpinner").style.display = "none";
+                displayMessage("userMessage", "User verified successfully!", "success");
+                checkFormValidity();
+            }, 1000);
+        }
+
+        function checkFormValidity() {
+            const sponsorValid = document.getElementById("sponsorUserId").value !== "";
+            const externalUserValid = document.getElementById("externalUserEmail").value !== "";
+
+            document.getElementById("submitButton").disabled = !(sponsorValid && externalUserValid);
+        }
+
+        async function submitForm() {
+            displayMessage("userMessage", "Form submitted successfully!", "success");
         }
     </script>
+
 </body>
 </html>
