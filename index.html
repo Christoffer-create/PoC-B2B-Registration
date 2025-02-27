@@ -338,6 +338,7 @@
                     messageDiv.textContent = "Sponsor not found.";
                     messageDiv.classList.add("error");
                     messageDiv.style.display = "block";
+                    document.getElementById("sponsorUserId").value = "";
                 }
             } catch (error) {
                 messageDiv.textContent = "Error verifying sponsor.";
