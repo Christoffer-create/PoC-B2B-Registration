@@ -332,10 +332,12 @@
                     const data = await response.json();
                     document.getElementById("sponsorUserId").value = data.sponsorUserId || "";
                     messageDiv.textContent = "Sponsor verified successfully!";
+                    messageDiv.classList.remove("error");
                     messageDiv.classList.add("success");
                     messageDiv.style.display = "block";
                 } else {
                     messageDiv.textContent = "Sponsor not found.";
+                    messageDiv.classList.remove("success");
                     messageDiv.classList.add("error");
                     messageDiv.style.display = "block";
                     document.getElementById("sponsorUserId").value = "";
