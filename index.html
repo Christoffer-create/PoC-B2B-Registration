@@ -38,10 +38,15 @@
             gap: 3%;
         }
         input, select {
-            width: 82%;
+            width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+        .input-container button {
+            width: auto;
+            padding: 8px 12px;
+            margin-left: auto;
         }
         button {
             background-color: #143275;
@@ -51,7 +56,6 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            width: 15%;
         }
         button:hover {
             background-color: #0f2759;
@@ -67,7 +71,7 @@
                 <td>
                     <div class="input-container">
                         <input type="text" id="sponsorName">
-                        <button onclick="verifySponsor()">✔</button>
+                        <button onclick="verifySponsor()">Verify</button>
                     </div>
                 </td>
             </tr>
@@ -76,7 +80,7 @@
                 <td>
                     <div class="input-container">
                         <input type="email" id="externalUserEmail">
-                        <button onclick="verifyExternalUser()">✔</button>
+                        <button onclick="verifyExternalUser()">Verify</button>
                     </div>
                 </td>
             </tr>
