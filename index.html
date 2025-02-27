@@ -21,7 +21,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
+            text-align: center;
             width: 400px;
         }
         table {
@@ -30,10 +30,12 @@
         }
         td {
             padding: 10px;
+            text-align: left;
         }
         .input-container {
             display: flex;
             align-items: center;
+            gap: 3%;
         }
         input, select {
             width: 82%;
@@ -41,37 +43,31 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .input-container button {
-            width: 15%;
-            margin-left: 3%;
+        button {
             background-color: #143275;
             color: white;
             border: none;
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-        }
-        .input-container button:hover {
-            background-color: #0f2759;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 10px;
             font-size: 16px;
+            width: 15%;
+        }
+        button:hover {
+            background-color: #0f2759;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 style="text-align: center;">External User Registration</h2>
+        <h2>External User Registration</h2>
         <table>
             <tr>
                 <td>Sponsor Name:</td>
                 <td>
                     <div class="input-container">
                         <input type="text" id="sponsorName">
-                        <button onclick="verifySponsor()">Verify</button>
+                        <button onclick="verifySponsor()">✔</button>
                     </div>
                 </td>
             </tr>
@@ -80,7 +76,7 @@
                 <td>
                     <div class="input-container">
                         <input type="email" id="externalUserEmail">
-                        <button onclick="verifyExternalUser()">Verify</button>
+                        <button onclick="verifyExternalUser()">✔</button>
                     </div>
                 </td>
             </tr>
@@ -93,17 +89,23 @@
                 <td>
                     <select id="usageLocation">
                         <option value="US">United States</option>
+                        <option value="CA">Canada</option>
                         <option value="GB">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
                         <option value="SE">Sweden</option>
                         <option value="NO">Norway</option>
-                        <option value="FI">Finland</option>
                         <option value="DK">Denmark</option>
+                        <option value="FI">Finland</option>
+                        <option value="NL">Netherlands</option>
+                        <option value="JP">Japan</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">
-                    <button class="submit-btn" onclick="submitForm()">Submit</button>
+                    <button onclick="submitForm()">Submit</button>
                 </td>
             </tr>
         </table>
