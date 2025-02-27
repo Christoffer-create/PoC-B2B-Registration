@@ -286,8 +286,8 @@
 
             const user = await getUserInfo();
             if (user) {
-        const email = user.claims.find(claim => claim.typ === "emailaddress")?.val || "Email not found";
-        document.getElementById("sponsorEmail").value = emailaddress;
+        const email = user.claims.find(claim => claim.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.val || "Email not found";
+        document.getElementById("sponsorEmail").value = email;
                 document.getElementById("sponsorUserId").value = user.userId;
             } else {
                 document.getElementById("sponsorEmail").value = "Not logged in";
