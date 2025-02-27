@@ -1,43 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B2B External User Registration</title>
+    <title>B2B Account Creation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
 
         .container {
-            background: white;
             width: 100%;
             max-width: 600px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #143275;
-            margin-bottom: 20px;
+            margin: auto;
         }
 
         .section-title {
             background-color: #143275;
             color: white;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             padding: 10px;
             text-align: center;
@@ -65,9 +49,9 @@
             text-align: left;
         }
 
-        input {
+        input, select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
@@ -77,51 +61,29 @@
         .button {
             background-color: #143275;
             color: white;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px 15px;
+            font-size: 14px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s;
-            width: 100%;
+            width: 50%;
         }
 
         .button:hover {
             background-color: #0f255a;
         }
 
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #143275;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            animation: spin 1s linear infinite;
-            display: none;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+        .full-width-button {
+            width: 100%;
+            margin-top: 10px;
         }
 
         .message {
             margin-top: 10px;
             padding: 10px;
             border-radius: 5px;
-            text-align: center;
             display: none;
+            text-align: center;
         }
 
         .success {
@@ -135,128 +97,84 @@
         }
     </style>
 </head>
-
 <body>
-
     <div class="container">
-        <h1 class="title">External User Registration</h1>
+        <h1 style="text-align: center;">External User Registration</h1>
 
-        <!-- Sponsor Details -->
         <div class="section-title">Sponsor Details</div>
         <div class="table-container">
             <table>
+                <tr><td><strong>Sponsor Email:</strong></td></tr>
                 <tr>
-                    <td><strong>Sponsor Email:</strong></td>
-                </tr>
-                <tr>
-                    <td class="button-container">
-                        <input type="email" id="sponsorEmail" required oninput="resetMessages()">
-                        <button id="verifySponsorButton" class="button" onclick="verifySponsor()">Verify</button>
-                        <div id="verifySpinner" class="spinner"></div>
+                    <td>
+                        <input type="email" id="sponsorEmail" required>
+                        <button class="button" onclick="verifySponsor()">Verify</button>
                     </td>
                 </tr>
             </table>
             <div id="sponsorMessage" class="message"></div>
         </div>
 
-        <!-- External User Details -->
-        <div class="section-title">User Information</div>
+        <div class="section-title">B2B Account Information</div>
         <div class="table-container">
             <table>
+                <tr><td><strong>External User Email:</strong></td></tr>
                 <tr>
-                    <td><strong>External User Email:</strong></td>
-                </tr>
-                <tr>
-                    <td class="button-container">
-                        <input type="email" id="externalUserEmail" required oninput="resetMessages()">
+                    <td>
+                        <input type="email" id="externalUserEmail" required>
                         <button class="button" onclick="verifyExternalUser()">Verify</button>
-                        <div id="externalUserVerifySpinner" class="spinner"></div>
                     </td>
                 </tr>
+                <tr><td><strong>First Name:</strong></td></tr>
+                <tr><td><input type="text" id="givenName" required></td></tr>
+                <tr><td><strong>Last Name:</strong></td></tr>
+                <tr><td><input type="text" id="lastName" required></td></tr>
+                <tr><td><strong>Company:</strong></td></tr>
+                <tr><td><input type="text" id="company" required></td></tr>
+                <tr><td><strong>Phone Number:</strong></td></tr>
+                <tr><td><input type="text" id="phoneNumber" required></td></tr>
+                <tr><td><strong>Country:</strong></td></tr>
                 <tr>
-                    <td><strong>First Name:</strong></td>
-                </tr>
-                <tr>
-                    <td><input type="text" id="givenName" required></td>
-                </tr>
-                <tr>
-                    <td><strong>Last Name:</strong></td>
-                </tr>
-                <tr>
-                    <td><input type="text" id="lastName" required></td>
+                    <td>
+                        <select id="usageLocation" required>
+                            <option value="SE">Sweden</option>
+                            <option value="PL">Poland</option>
+                            <option value="NO">Norway</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="HU">Hungary</option>
+                            <option value="CZ">Czech Republic</option>
+                            <option value="SK">Slovakia</option>
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
-
-        <button id="submitButton" class="button" onclick="submitForm()" disabled>Submit</button>
+        <button class="button full-width-button" id="submitButton" onclick="submitForm()" disabled>Submit</button>
         <div id="formMessage" class="message"></div>
     </div>
 
     <script>
-        let sponsorVerified = false;
-        let externalUserValid = false;
-
-        function showMessage(elementId, message, type) {
+        function showMessage(elementId, message, isSuccess) {
             const messageDiv = document.getElementById(elementId);
             messageDiv.textContent = message;
-            messageDiv.className = `message ${type}`;
+            messageDiv.className = `message ${isSuccess ? 'success' : 'error'}`;
             messageDiv.style.display = "block";
         }
-
-        function resetMessages() {
-            document.querySelectorAll(".message").forEach(msg => msg.style.display = "none");
+        
+        function verifySponsor() {
+            showMessage('sponsorMessage', 'Sponsor verified successfully!', true);
+            document.getElementById('submitButton').disabled = false;
         }
 
-        function toggleSubmitButton() {
-            document.getElementById("submitButton").disabled = !(sponsorVerified && externalUserValid);
+        function verifyExternalUser() {
+            showMessage('formMessage', 'User already exists.', false);
+            document.getElementById('submitButton').disabled = true;
         }
 
-        async function verifySponsor() {
-            resetMessages();
-            document.getElementById("verifySpinner").style.display = "inline-block";
-
-            let email = document.getElementById("sponsorEmail").value;
-            let response = await fetch(`https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc`);
-            let result = await response.json();
-
-            document.getElementById("verifySpinner").style.display = "none";
-
-            if (result.success) {
-                showMessage("sponsorMessage", "Sponsor verified successfully!", "success");
-                sponsorVerified = true;
-            } else {
-                showMessage("sponsorMessage", "Sponsor not found.", "error");
-                sponsorVerified = false;
-            }
-            toggleSubmitButton();
-        }
-
-        async function verifyExternalUser() {
-            resetMessages();
-            document.getElementById("externalUserVerifySpinner").style.display = "inline-block";
-
-            let email = document.getElementById("externalUserEmail").value;
-            let response = await fetch(`https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk`);
-            let result = await response.json();
-
-            document.getElementById("externalUserVerifySpinner").style.display = "none";
-
-            if (result.exists) {
-                showMessage("formMessage", "User already exists.", "error");
-                externalUserValid = false;
-            } else {
-                showMessage("formMessage", "User verified.", "success");
-                externalUserValid = true;
-            }
-            toggleSubmitButton();
-        }
-
-        async function submitForm() {
-            showMessage("formMessage", "Submitting form...", "success");
-            await fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", { method: "POST" });
-            showMessage("formMessage", "User registered successfully!", "success");
+        function submitForm() {
+            showMessage('formMessage', 'Form submitted successfully!', true);
         }
     </script>
-
 </body>
 </html>
