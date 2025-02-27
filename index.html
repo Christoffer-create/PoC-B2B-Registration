@@ -10,55 +10,38 @@
             background-color: #143275;
             color: white;
             text-align: center;
-            margin: 0;
-            padding: 0;
+            padding: 20px;
         }
         .container {
-            width: 50%;
-            margin: 20px auto;
-            background-color: white;
+            background: white;
             color: black;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: auto;
         }
         table {
             width: 100%;
-            border-collapse: collapse;
         }
-        td {
+        th, td {
             padding: 10px;
         }
         input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            width: calc(100% - 50px);
+            padding: 5px;
         }
-        button {
+        .btn {
+            padding: 5px 10px;
+            cursor: pointer;
             background-color: #143275;
             color: white;
-            padding: 10px;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
         }
-        .verify-btn {
-            width: 50%;
-        }
-        .message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .success {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .error {
-            background-color: #f44336;
-            color: white;
+        .loading {
+            display: none;
+            font-size: 14px;
+            color: #143275;
         }
     </style>
 </head>
@@ -67,104 +50,66 @@
     <div class="container">
         <table>
             <tr>
-                <td>Sponsor Name:</td>
+                <td>Sponsor Name</td>
                 <td>
                     <input type="text" id="sponsorName">
-                    <button class="verify-btn" onclick="verifySponsor()">Verify Sponsor</button>
+                    <button class="btn" onclick="verifySponsor()">Verify</button>
+                    <span id="sponsorLoading" class="loading">Checking...</span>
                 </td>
             </tr>
             <tr>
-                <td>External User Email:</td>
+                <td>External User Email</td>
                 <td>
-                    <input type="email" id="externalUserEmail">
-                    <button class="verify-btn" onclick="verifyExternalUser()">Verify User</button>
+                    <input type="text" id="externalEmail">
+                    <button class="btn" onclick="verifyExternalUser()">Verify</button>
+                    <span id="externalLoading" class="loading">Checking...</span>
                 </td>
             </tr>
-            <tr><td>First Name:</td><td><input type="text" id="firstName"></td></tr>
-            <tr><td>Last Name:</td><td><input type="text" id="lastName"></td></tr>
-            <tr><td>Phone Number:</td><td><input type="text" id="phoneNumber"></td></tr>
-            <tr><td>Company:</td><td><input type="text" id="company"></td></tr>
+            <tr><td>First Name</td><td><input type="text" id="firstName"></td></tr>
+            <tr><td>Last Name</td><td><input type="text" id="lastName"></td></tr>
+            <tr><td>Phone Number</td><td><input type="text" id="phoneNumber"></td></tr>
+            <tr><td>Company</td><td><input type="text" id="company"></td></tr>
             <tr>
-                <td>Usage Location:</td>
+                <td>Usage Location</td>
                 <td>
                     <select id="usageLocation">
                         <option value="US">United States</option>
                         <option value="UK">United Kingdom</option>
-                        <option value="CA">Canada</option>
                         <option value="DE">Germany</option>
-                        <option value="FR">France</option>
                         <option value="SE">Sweden</option>
+                        <option value="IN">India</option>
+                        <option value="CN">China</option>
                     </select>
                 </td>
             </tr>
         </table>
-        <button id="submitButton" onclick="submitForm()" disabled>Submit Form</button>
-        <div id="messageContainer" class="message"></div>
+        <button class="btn" onclick="submitForm()" id="submitBtn" disabled>Submit</button>
+        <span id="submitLoading" class="loading">Submitting...</span>
     </div>
 
     <script>
         function verifySponsor() {
-            const sponsorName = document.getElementById("sponsorName").value;
-            fetch("SPONSOR_API_URL", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sponsorName })
-            })
-            .then(response => response.json())
-            .then(data => {
-                showMessage("Sponsor verified successfully!", "success");
-                document.getElementById("submitButton").disabled = false;
-            })
-            .catch(() => showMessage("Error verifying sponsor", "error"));
+            document.getElementById("sponsorLoading").style.display = "inline";
+            setTimeout(() => {
+                document.getElementById("sponsorLoading").style.display = "none";
+                document.getElementById("submitBtn").disabled = false;
+            }, 2000);
         }
 
         function verifyExternalUser() {
-            const email = document.getElementById("externalUserEmail").value;
-            fetch("EXTERNAL_USER_API_URL", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.exists) {
-                    showMessage("User already exists!", "error");
-                    document.getElementById("submitButton").disabled = true;
-                } else {
-                    document.getElementById("firstName").value = data.firstName;
-                    document.getElementById("lastName").value = data.lastName;
-                    document.getElementById("phoneNumber").value = data.phoneNumber;
-                    document.getElementById("company").value = data.company;
-                    showMessage("User verified successfully!", "success");
-                    document.getElementById("submitButton").disabled = false;
-                }
-            })
-            .catch(() => showMessage("Error verifying user", "error"));
+            document.getElementById("externalLoading").style.display = "inline";
+            setTimeout(() => {
+                document.getElementById("externalLoading").style.display = "none";
+                document.getElementById("submitBtn").disabled = false;
+            }, 2000);
         }
 
         function submitForm() {
-            const formData = {
-                sponsorName: document.getElementById("sponsorName").value,
-                externalUserEmail: document.getElementById("externalUserEmail").value,
-                firstName: document.getElementById("firstName").value,
-                lastName: document.getElementById("lastName").value,
-                phoneNumber: document.getElementById("phoneNumber").value,
-                company: document.getElementById("company").value,
-                usageLocation: document.getElementById("usageLocation").value
-            };
-            fetch("SUBMIT_FORM_API_URL", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            })
-            .then(() => showMessage("Form submitted successfully!", "success"))
-            .catch(() => showMessage("Error submitting form", "error"));
-        }
-
-        function showMessage(message, type) {
-            const messageContainer = document.getElementById("messageContainer");
-            messageContainer.textContent = message;
-            messageContainer.className = `message ${type}`;
+            document.getElementById("submitLoading").style.display = "inline";
+            setTimeout(() => {
+                document.getElementById("submitLoading").style.display = "none";
+                alert("Form submitted successfully!");
+            }, 2000);
         }
     </script>
 </body>
