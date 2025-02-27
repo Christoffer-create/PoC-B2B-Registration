@@ -384,12 +384,15 @@
                     document.getElementById("phoneNumber").value = data.phoneNumber || "";
                     document.getElementById("usageLocation").value = data.usageLocation || "";
 
-                    userFoundMessage.textContent = "User found and details populated.";
-                    userFoundMessage.style.display = "block";
+                    messageDiv.classList.add("successhehe");
+                    //userFoundMessage.textContent = "User found and details populated.";
+                    //userFoundMessage.style.display = "block";
                 } else {
+                    messageDiv.classList.add("errorhehe");
                     alert("User not found.");
                 }
             } catch (error) {
+                messageDiv.classList.add("errorhehe");
                 alert("Error verifying user.");
             } finally {
                 spinner.style.display = "none";
