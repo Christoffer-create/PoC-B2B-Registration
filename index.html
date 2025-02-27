@@ -286,7 +286,8 @@
 
             const user = await getUserInfo();
             if (user) {
-                document.getElementById("sponsorEmail").value = user.userDetails;
+        const email = user.claims.find(claim => claim.typ === "emails")?.val || "Email not found";
+        document.getElementById("sponsorEmail").value = email;
                 document.getElementById("sponsorUserId").value = user.userId;
             } else {
                 document.getElementById("sponsorEmail").value = "Not logged in";
