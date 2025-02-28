@@ -262,26 +262,50 @@
         };
     }
 
-    async function getUserSession() {
-        try {
-            const response = await fetch("/.auth/me");
-            if (!response.ok) return null;
+async function getUserSession() {
+    try {
+        const response = await fetch("/.auth/me");
+        if (!response.ok) {
+            throw new Error(`Session fetch failed: ${response.status}`);
+        }
+        const data = await response.json();
 
-            const data = await response.json();
-            if (!data.clientPrincipal) return null;
+        if (data.clientPrincipal) {
+            const userId = data.clientPrincipal.userId;
+            const emailClaim = data.clientPrincipal.claims.find(claim => 
+                claim.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+            );
+            const email = emailClaim ? emailClaim.val : "";
 
-            let userId = data.clientPrincipal.userId;
-            let email = data.clientPrincipal.claims.find(c => c.typ.includes("emailaddress"))?.val || "";
+            console.log("User Session Loaded:", { userId, email });
 
-            document.getElementById("sponsorEmail").value = email;
-            document.getElementById("userId").value = userId;  
+            // ✅ Check if the sponsorEmail field exists before setting its value
+            let sponsorEmailField = document.getElementById("sponsorEmail");
+            if (sponsorEmailField) {
+                sponsorEmailField.value = email;
+            } else {
+                console.error("🚨 Error: sponsorEmail input field is missing in the HTML.");
+            }
+
+            // ✅ Check if the sponsorId field exists before setting its value
+            let sponsorIdField = document.getElementById("sponsorId");
+            if (sponsorIdField) {
+                sponsorIdField.value = userId;
+            } else {
+                console.error("🚨 Error: sponsorId input field is missing in the HTML.");
+            }
 
             return { userId, email };
-        } catch (error) {
-            console.error("Error fetching session:", error);
+        } else {
+            console.log("No user session found.");
             return null;
         }
+    } catch (error) {
+        console.error("🚨 Error fetching session:", error);
+        return null;
     }
+}
+
 
 function verifySponsor() {
     let sponsorEmail = document.getElementById("sponsorEmail").value.trim();
