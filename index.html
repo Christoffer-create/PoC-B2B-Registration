@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>External User Registration</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,14 +24,6 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 65%;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        td {
-            padding: 1%;
-            text-align: left;
         }
         .input-container {
             display: flex;
@@ -54,181 +47,172 @@
             height: 20px;
             animation: spin 2s linear infinite;
         }
+        .check {
+            height: 20px;
+            width: 8px;
+            border-bottom: 3px solid green;
+            border-right: 3px solid green;
+            transform: rotate(45deg);
+            margin-left: 2%;
+        }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        input, select {
-            width: calc(68% - 2%); /* Adjust width to 68% */
-            padding: 1%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #143275;
-            color: white;
-            border: none;
-            padding: 1%;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            width: 30%; /* Set submit button width to 30% */
-        }
-        button:hover {
-            background-color: #0f2759;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container mt-5">
         <h2>External User Registration</h2>
-        <table>
-            <tr>
-                <td>Sponsor Email:</td>
-                <td>
-                    <div class="input-container">
-                        <input type="email" id="sponsorEmail" onkeyup="debounce(verifySponsor, 500)">
-                        <div id="sponsorStatus" class="status-icon"></div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>External User Email:</td>
-                <td>
-                    <div class="input-container">
-                        <input type="email" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 500)">
-                        <div id="externalUserStatus" class="status-icon"></div>
-                    </div>
-                </td>
-            </tr>
-            <tr><td>First Name:</td><td><input type="text" id="firstName"></td></tr>
-            <tr><td>Last Name:</td><td><input type="text" id="lastName"></td></tr>
-            <tr><td>Phone Number:</td><td><input type="text" id="phoneNumber"></td></tr>
-            <tr><td>Company:</td><td><input type="text" id="company"></td></tr>
-            <tr>
-                <td>Usage Location:</td>
-                <td>
-                    <select id="usageLocation">
-                        <option value="US">United States</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="SE">Sweden</option>
-                        <option value="NO">Norway</option>
-                        <option value="DK">Denmark</option>
-                        <option value="FI">Finland</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align: center;">
-                    <button onclick="submitForm()">Submit</button>
-                </td>
-            </tr>
-        </table>
-        <input type="hidden" id="sponsorId" name="sponsorId">
+        <form>
+            <div class="form-group">
+                <label for="sponsorEmail">Sponsor Email:</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 500)">
+                    <div id="sponsorStatus" class="input-group-append"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="externalUserEmail">External User Email:</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 500)">
+                    <div id="externalUserStatus" class="input-group-append"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" class="form-control" id="firstName">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" class="form-control" id="lastName">
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" class="form-control" id="phoneNumber">
+            </div>
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <input type="text" class="form-control" id="company">
+            </div>
+            <div class="form-group">
+                <label for="usageLocation">Usage Location:</label>
+                <select class="form-control" id="usageLocation">
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="SE">Sweden</option>
+                    <option value="NO">Norway</option>
+                    <option value="DK">Denmark</option>
+                    <option value="FI">Finland</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+            <input type="hidden" id="sponsorId" name="sponsorId">
+        </form>
     </div>
 
-<script>
-    let debounceTimeout;
+    <script>
+        let debounceTimeout;
 
-    function debounce(func, delay) {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(func, delay);
-    }
-
-    function verifySponsor() {
-        let sponsorEmail = document.getElementById("sponsorEmail").value;
-        let sponsorStatus = document.getElementById("sponsorStatus");
-        let sponsorIdField = document.getElementById("sponsorId");
-        if (!sponsorEmail) {
-            sponsorStatus.innerHTML = "";
-            sponsorIdField.value = "";
-            return;
+        function debounce(func, delay) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(func, delay);
         }
-        sponsorStatus.innerHTML = '<div class="loading"></div>';
-        
-        // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
-        fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email: sponsorEmail })
-        })
-        .then(response => {
-            console.log('Response status:', response.status);
-            if (response.status === 200) {
-                sponsorStatus.innerHTML = '✅'; // Green check mark emoji
-                return response.json();
-            } else if (response.status === 403) {
-                sponsorStatus.innerHTML = '❌'; // Red X mark emoji
+
+        function verifySponsor() {
+            let sponsorEmail = document.getElementById("sponsorEmail").value;
+            let sponsorStatus = document.getElementById("sponsorStatus");
+            let sponsorIdField = document.getElementById("sponsorId");
+            if (!sponsorEmail) {
+                sponsorStatus.innerHTML = "";
                 sponsorIdField.value = "";
-                throw new Error('Forbidden');
-            } else {
-                sponsorStatus.innerHTML = '❓'; // Question mark for other statuses
+                return;
+            }
+            sponsorStatus.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
+            
+            // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
+            fetch('YOUR_LOGIC_APP_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: sponsorEmail })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (response.status === 200) {
+                    sponsorStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
+                    return response.json();
+                } else if (response.status === 403) {
+                    sponsorStatus.innerHTML = '❌'; // Red X mark emoji
+                    sponsorIdField.value = "";
+                    throw new Error('Forbidden');
+                } else {
+                    sponsorStatus.innerHTML = '❓'; // Question mark for other statuses
+                    sponsorIdField.value = "";
+                    throw new Error('Unexpected status');
+                }
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                sponsorIdField.value = data.sponsorId; // Assuming the response contains sponsorId
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                sponsorStatus.innerHTML = '❌'; // Red X mark emoji for errors
                 sponsorIdField.value = "";
-                throw new Error('Unexpected status');
-            }
-        })
-        .then(data => {
-            console.log('Response data:', data);
-            sponsorIdField.value = data.sponsorId; // Assuming the response contains sponsorId
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            sponsorStatus.innerHTML = '❌'; // Red X mark emoji for errors
-            sponsorIdField.value = "";
-        });
-    }
-
-    function verifyExternalUser() {
-        let email = document.getElementById("externalUserEmail").value;
-        let externalUserStatus = document.getElementById("externalUserStatus");
-        if (!email) {
-            externalUserStatus.innerHTML = "";
-            return;
+            });
         }
-        externalUserStatus.innerHTML = '<div class="loading"></div>';
-        
-        // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
-        fetch('YOUR_LOGIC_APP_URL', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email: email })
-        })
-        .then(response => {
-            console.log('Response status:', response.status);
-            if (response.status === 200) {
-                externalUserStatus.innerHTML = '✅'; // Green check mark emoji
-            } else if (response.status === 403) {
-                externalUserStatus.innerHTML = '❌'; // Red X mark emoji
-            } else {
-                externalUserStatus.innerHTML = '❓'; // Question mark for other statuses
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            externalUserStatus.innerHTML = '❌'; // Red X mark emoji for errors
-        });
-    }
 
-    function submitForm() {
-        let sponsorEmail = document.getElementById("sponsorEmail").value;
-        let email = document.getElementById("externalUserEmail").value;
-        let firstName = document.getElementById("firstName").value;
-        let lastName = document.getElementById("lastName").value;
-        let phoneNumber = document.getElementById("phoneNumber").value;
-        let company = document.getElementById("company").value;
-        let usageLocation = document.getElementById("usageLocation").value;
-        let sponsorId = document.getElementById("sponsorId").value;
-        
-        if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
-            alert("Please fill in all fields before submitting.");
-            return;
+        function verifyExternalUser() {
+            let email = document.getElementById("externalUserEmail").value;
+            let externalUserStatus = document.getElementById("externalUserStatus");
+            if (!email) {
+                externalUserStatus.innerHTML = "";
+                return;
+            }
+            externalUserStatus.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
+            
+            // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
+            fetch('YOUR_LOGIC_APP_URL', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (response.status === 200) {
+                    externalUserStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
+                } else if (response.status === 403) {
+                    externalUserStatus.innerHTML = '❌'; // Red X mark emoji
+                } else {
+                    externalUserStatus.innerHTML = '❓'; // Question mark for other statuses
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                externalUserStatus.innerHTML = '❌'; // Red X mark emoji for errors
+            });
         }
-        console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
-    }
-</script>
+
+        function submitForm() {
+            let sponsorEmail = document.getElementById("sponsorEmail").value;
+            let email = document.getElementById("externalUserEmail").value;
+            let firstName = document.getElementById("firstName").value;
+            let lastName = document.getElementById("lastName").value;
+            let phoneNumber = document.getElementById("phoneNumber").value;
+            let company = document.getElementById("company").value;
+            let usageLocation = document.getElementById("usageLocation").value;
+            let sponsorId = document.getElementById("sponsorId").value;
+            
+            if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
+                alert("Please fill in all fields before submitting.");
+                return;
+            }
+            console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
+        }
+    </script>
 </body>
 </html>
