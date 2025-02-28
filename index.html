@@ -240,151 +240,129 @@ form {
                     </select>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+            <button id="submitButton" type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
             <input type="hidden" id="sponsorId" name="sponsorId">
         </form>
     </div>
-
     <script>
-        let debounceTimeout;
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("sponsorEmail").addEventListener("input", () => debounce(verifySponsor, 900));
+    document.getElementById("externalUserEmail").addEventListener("input", () => debounce(verifyExternalUser, 900));
+    document.getElementById("sponsorId").addEventListener("input", checkSubmitButton);
+    document.getElementById("externalUserEmail").addEventListener("input", checkSubmitButton);
+});
 
-        function debounce(func, delay) {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(func, delay);
-        }
+// Function to enable/disable submit button based on conditions
+function checkSubmitButton() {
+    let sponsorId = document.getElementById("sponsorId").value;
+    let externalUserStatus = document.getElementById("externalUserStatus").dataset.status; // "valid" or "invalid"
+    let submitButton = document.getElementById("submitButton");
 
-    async function getUserSession() {
-        try {
-            const response = await fetch("/.auth/me");
-            const data = await response.json();
+    if (!sponsorId || externalUserStatus === "invalid") {
+        submitButton.disabled = true;
+    } else {
+        submitButton.disabled = false;
+    }
+}
 
-            if (data.clientPrincipal) {
-                const userId = data.clientPrincipal.userId;
-                const emailClaim = data.clientPrincipal.claims.find(claim => 
-                    claim.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-                );
-                const email = emailClaim ? emailClaim.val : "Email not found";
+// Verify sponsor function (updated for #EXT# check)
+function verifySponsor() {
+    let sponsorEmail = document.getElementById("sponsorEmail").value;
+    let sponsorStatus = document.getElementById("sponsorStatus");
+    let sponsorIdField = document.getElementById("sponsorId");
 
-                console.log("User ID:", userId);
-                console.log("Email:", email);
-
-                document.getElementById("sponsorEmail").value = email;
-                document.getElementById("userId").value = userId;
-
-                return { userId, email };
-            } else {
-                console.log("No user session found.");
-                return null;
-            }
-        } catch (error) {
-            console.error("Error fetching user session:", error);
-            return null;
-        }
+    if (!sponsorEmail) {
+        sponsorStatus.innerHTML = "";
+        sponsorIdField.value = "";
+        checkSubmitButton();
+        return;
     }
 
-    // Usage
-    document.addEventListener("DOMContentLoaded", function() {
-        getUserSession().then(user => {
-            if (user) {
-                console.log("User session retrieved:", user);
-            }
-        });
-    });
+    // If sponsor email contains #EXT#, return ❌ immediately
+    if (sponsorEmail.includes("#EXT#")) {
+        sponsorStatus.innerHTML = '<div class="x-mark"></div>';
+        sponsorIdField.value = "";
+        checkSubmitButton();
+        return;
+    }
 
-        function verifySponsor() {
-            let sponsorEmail = document.getElementById("sponsorEmail").value;
-            let sponsorStatus = document.getElementById("sponsorStatus");
-            let sponsorIdField = document.getElementById("sponsorId");
-            if (!sponsorEmail) {
-                sponsorStatus.innerHTML = "";
-                sponsorIdField.value = "";
-                return;
-            }
-              sponsorStatus.innerHTML = '<div class="loader"></div>';
-            
-            
-            fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: sponsorEmail })
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                if (response.status === 200) {
-                    sponsorStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
-                    return response.json();
-                } else if (response.status === 404) {
-            sponsorStatus.innerHTML = '<div class="x-mark"></div>';
-                    sponsorIdField.value = "";
-                    throw new Error('Forbidden');
-                } else {
-                    sponsorStatus.innerHTML = '';
-                    sponsorIdField.value = "";
-                    throw new Error('Unexpected status');
-                }
-            })
-            .then(data => {
-                console.log('Response data:', data);
-                sponsorIdField.value = data.sponsorId; // Assuming the response contains sponsorId
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            sponsorStatus.innerHTML = '<div class="x-mark"></div>';
-                sponsorIdField.value = "";
-            });
-        }
+    sponsorStatus.innerHTML = '<div class="loader"></div>';
 
-        function verifyExternalUser() {
-            let email = document.getElementById("externalUserEmail").value;
-            let externalUserStatus = document.getElementById("externalUserStatus");
-            if (!email) {
-                externalUserStatus.innerHTML = "";
-                return;
-            }
-            externalUserStatus.innerHTML = '<div class="loader"></div>';
-            
-            fetch('https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email })
-            })
-               .then(response => {
+    fetch('/api/verify-sponsor', {  
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: sponsorEmail })
+    })
+    .then(response => {
         if (response.status === 200) {
-            externalUserStatus.innerHTML = '<div class="x-mark"></div>';
+            sponsorStatus.innerHTML = '<div class="check"></div>'; // ✅ Sponsor exists
+            return response.json();
+        } else {
+            sponsorStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Sponsor not found
+            sponsorIdField.value = "";
+            throw new Error('Sponsor not found');
+        }
+    })
+    .then(data => {
+        sponsorIdField.value = data.sponsorId;
+        checkSubmitButton();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        checkSubmitButton();
+    });
+}
+
+// Verify external user function (updated for email format check)
+function verifyExternalUser() {
+    let email = document.getElementById("externalUserEmail").value;
+    let externalUserStatus = document.getElementById("externalUserStatus");
+
+    if (!email) {
+        externalUserStatus.innerHTML = "";
+        externalUserStatus.dataset.status = "invalid"; // Mark as invalid
+        checkSubmitButton();
+        return;
+    }
+
+    // Email format validation
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Invalid format
+        externalUserStatus.dataset.status = "invalid";
+        checkSubmitButton();
+        return;
+    }
+
+    externalUserStatus.innerHTML = '<div class="loader"></div>';
+
+    fetch('/api/verify-external-user', {  
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => {
+        if (response.status === 200) {
+            externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Email exists
+            externalUserStatus.dataset.status = "invalid";
+            checkSubmitButton();
             return response.json();
         } else if (response.status === 404) {
-            externalUserStatus.innerHTML = '<div class="check"></div>';
-            return null; // No need to throw an error
+            externalUserStatus.innerHTML = '<div class="check"></div>'; // ✅ Email available
+            externalUserStatus.dataset.status = "valid";
+            checkSubmitButton();
+            return null;
         } else {
-            return Promise.reject(`Unexpected status: ${response.status}`); // Only reject for unexpected issues
+            throw new Error('Unexpected status');
         }
     })
     .catch(error => {
-        console.error('Unexpected error:', error);
-        externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // Show error icon
+        console.error('Error:', error);
+        externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Error case
+        externalUserStatus.dataset.status = "invalid";
+        checkSubmitButton();
     });
-        }
-
-        function submitForm() {
-            let sponsorEmail = document.getElementById("sponsorEmail").value;
-            let email = document.getElementById("externalUserEmail").value;
-            let firstName = document.getElementById("firstName").value;
-            let lastName = document.getElementById("lastName").value;
-            let phoneNumber = document.getElementById("phoneNumber").value;
-            let company = document.getElementById("company").value;
-            let usageLocation = document.getElementById("usageLocation").value;
-            let sponsorId = document.getElementById("sponsorId").value;
-            
-            if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
-                alert("Please fill in all fields before submitting.");
-                return;
-            }
-            console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
-        }
-    </script>
+}
+</script>
 </body>
 </html>
