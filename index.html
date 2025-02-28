@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>External User Registration</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
 body {
     font-family: Arial, sans-serif;
@@ -70,6 +71,45 @@ form {
     width: 20px;
     position: relative;
 }
+        .info-icon {
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+}
+
+.info-icon .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position the tooltip above the icon */
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.info-icon .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* Arrow at the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.info-icon:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
 .x-mark::before, .x-mark::after {
     content: '';
     position: absolute;
@@ -112,6 +152,10 @@ form {
 <div class="input-container">
     <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 900)">
     <div id="sponsorStatus" class="status-icon"></div>
+                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Enter the email of the sponsor, the person from Skanska who the guest user reports to.</span>
+                </div>
 </div>
             </div>
             <div class="form-group">
@@ -119,30 +163,50 @@ form {
                 <div class="input-container">
                     <input type="email" class="form-control" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 900)">
                     <div id="externalUserStatus" class="status-icon"></div>
+                                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Enter the email of the external user.</span>
+                </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="firstName">First Name:</label>
                 <div class="input-container">
                     <input type="text" class="form-control" id="firstName">
+                                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Enter the first name of the user.</span>
+                </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="lastName">Last Name:</label>
                 <div class="input-container">
                     <input type="text" class="form-control" id="lastName">
+                                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Enter the last name of the user.</span>
+                </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="phoneNumber">Phone Number:</label>
                 <div class="input-container">
                     <input type="text" class="form-control" id="phoneNumber">
+                                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Enter the phone number of the user.</span>
+                </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="company">Company:</label>
                 <div class="input-container">
                     <input type="text" class="form-control" id="company">
+                                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Enter the company name.</span>
+                </div>
                 </div>
             </div>
             <div class="form-group">
@@ -156,6 +220,10 @@ form {
                         <option value="DK">Denmark</option>
                         <option value="FI">Finland</option>
                     </select>
+                                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Select the usage location, which Business unit the account is used in.</span>
+                </div>
                 </div>
             </div>
             <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
