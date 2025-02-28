@@ -7,486 +7,229 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #143275;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-        .h2, h2 {
-    font-size: 2rem;
-    display: ruby-text;
-}
-.container {
-    background: white;
-    color: black;
-    padding: 3%;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 65%;
-}
-form {
-    margin: 0 auto; /* Center the form horizontally */
-}
-.input-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Space between input and status icon */
-    margin-bottom: 1rem; /* Add some space between input groups */
-}
-.input-container input, .input-container select {
-    flex: 1; /* Allow input fields to take available space */
-    padding: 1%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    max-width: calc(100% - 35px); /* Ensure consistent width */
-}
-.status-icon {
-    width: 25px; /* Set a fixed width for the status icon */
-    height: 25px; /* Set a fixed height for the status icon */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 10px; /* Add some space between input and status icon */
-}
-.loader {
-    border: 4px solid #f3f3f3; /* Adjusted border size for smaller loader */
-    border-radius: 50%;
-    border-top: 4px solid #143275; /* Custom color */
-    width: 20px; /* Adjusted size for smaller loader */
-    height: 20px; /* Adjusted size for smaller loader */
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;
-}
-.check {
-    height: 20px;
-    width: 8px;
-    border-bottom: 3px solid green;
-    border-right: 3px solid green;
-    transform: rotate(45deg);
-}
-.x-mark {
-    height: 20px;
-    width: 20px;
-    position: relative;
-}
-.x-mark::before, .x-mark::after {
-    content: '';
-    position: absolute;
-    width: 3px;
-    height: 20px;
-    background-color: red;
-}
-.x-mark::before {
-    transform: rotate(45deg);
-    left: 50%;
-    top: 0;
-    transform-origin: center;
-}
-.x-mark::after {
-    transform: rotate(-45deg);
-    left: 50%;
-    top: 0;
-    transform-origin: center;
-}
-.input-group-append {
-    margin-left: 1.5%;
-    margin-top: 0.5%;
-}
-@-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.info-icon {
-    margin-left: 5px;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    color: #143275; /* Custom color */
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #143275;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-#submitButton {
-    width: 75%;
-}
+        .container {
+            background: white;
+            color: black;
+            padding: 3%;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 65%;
+        }
 
-.info-icon .tooltip-text {
-    visibility: hidden;
-    width: 200px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position the tooltip above the icon */
-    left: 50%;
-    margin-left: -100px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
 
-.info-icon .tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%; /* Arrow at the bottom of the tooltip */
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
+        .status-icon {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.info-icon:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-}
+        .status-icon.loading {
+            background: url('spinner.gif') no-repeat center center;
+        }
+
+        .status-icon.valid {
+            background: url('checkmark.png') no-repeat center center;
+        }
+
+        .status-icon.invalid {
+            background: url('cross.png') no-repeat center center;
+        }
+
+        .info-icon {
+            margin-left: 5px;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            color: #143275;
+        }
+
+        .info-icon .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .info-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        #submitButton {
+            width: 75%;
+        }
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <h2>External User Registration</h2>
-        <form>
+        <form id="myForm">
             <div class="form-group">
                 <label for="sponsorEmail">Sponsor Email
                     <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Enter the email of the sponsor, the person from Skanska who the guest user reports to.</span>
-                </div>
+                        <i class="fas fa-info-circle"></i>
+                        <span class="tooltip-text">Enter the sponsor's email.</span>
+                    </div>
                 </label>
-<div class="input-container">
-    <input type="hidden" id="userId" name="userId" value="" />
-    <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 900)">
-    <div id="sponsorStatus" class="status-icon"></div>
-</div>
+                <div class="input-container">
+                    <input type="hidden" id="userId" name="userId" value="" />
+                    <input type="email" class="form-control" id="sponsorEmail">
+                    <div id="sponsorStatus" class="status-icon"></div>
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="externalUserEmail">External User Email
                     <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Enter the email of the external user.</span>
-                </div>
+                        <i class="fas fa-info-circle"></i>
+                        <span class="tooltip-text">Enter the external user's email.</span>
+                    </div>
                 </label>
                 <div class="input-container">
-                    <input type="email" class="form-control" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 900)">
+                    <input type="email" class="form-control" id="externalUserEmail">
                     <div id="externalUserStatus" class="status-icon"></div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="firstName">First Name
-                    <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Enter the first name of the user.</span>
-                </div>
-                </label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="firstName">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="lastName">Last Name 
-                     <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Enter the last name of the user.</span>
-                </div>
-                
-                </label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="lastName">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="phoneNumber">Phone Number
-                    <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Enter the phone number of the user.</span>
-                </div>
-                </label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="phoneNumber">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="company">Company
-                    <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Enter the company name.</span>
-                </div>
-                </label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="company">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="usageLocation">Usage Location
-                    <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Select the usage location, which Business unit the account is used in.</span>
-                </div>
-                </label>
-                <div class="input-container">
-                    <select class="form-control" id="usageLocation">
-                        <option value="US">United States</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="SE">Sweden</option>
-                        <option value="NO">Norway</option>
-                        <option value="DK">Denmark</option>
-                        <option value="FI">Finland</option>
-                    </select>
-                </div>
-            </div>
-            <button id="submitButton" type="button" class="btn btn-primary" onclick="submitForm(event)">Submit</button>
+
+            <button id="submitButton" type="button" class="btn btn-primary" disabled>Submit</button>
             <input type="hidden" id="sponsorId" name="sponsorId">
         </form>
     </div>
+
     <script>
-    let sessionLoaded = false;
-        
-document.addEventListener("DOMContentLoaded", async function () {
-    // Fetch user session first
-    const session = await getUserSession();
-    if (!session) {
-        console.warn("No user session found. Blocking form interactions.");
-        return;
-    }
+        document.addEventListener("DOMContentLoaded", async function () {
+            await init();
+        });
 
-    // Set sponsor email field with logged-in user email
-    let sponsorEmailField = document.getElementById("sponsorEmail");
-    sponsorEmailField.value = session.email;
-    document.getElementById("userId").value = session.userId;
+        async function init() {
+            const session = await getUserSession();
+            if (!session) return;
 
-    // Immediately verify the prepopulated sponsor email
-    verifySponsor();
+            document.getElementById("sponsorEmail").value = session.email;
+            document.getElementById("userId").value = session.userId;
 
-    // Attach event listeners
-    sponsorEmailField.addEventListener("input", debounce(verifySponsor, 900));
-    document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
-
-    checkSubmitButton(); // Run initial check
-});
-
-// Debounce function to optimize API calls
-function debounce(func, delay) {
-    let debounceTimeout;
-    return function (...args) {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => func(...args), delay);
-    };
-}
-
-// Function to enable/disable submit button based on BOTH sponsor and external user status
-function checkSubmitButton() {
-    let sponsorStatus = document.getElementById("sponsorStatus").dataset.status; // "valid" or "invalid"
-    let externalUserStatus = document.getElementById("externalUserStatus").dataset.status; // "valid" or "invalid"
-    let submitButton = document.getElementById("submitButton");
-
-    if (sponsorStatus === "valid" && externalUserStatus === "valid") {
-        submitButton.disabled = false;
-    } else {
-        submitButton.disabled = true;
-    }
-}
-
-// Function to fetch user session
-async function getUserSession() {
-    if (sessionLoaded) return; // Prevent duplicate calls
-    sessionLoaded = true; // Mark session as loaded
-    try {
-        const response = await fetch("/.auth/me");
-        if (!response.ok) {
-            console.error(`Session fetch failed: ${response.status}`);
-            return null;
+            verifySponsor();
+            attachDebouncedEvent("sponsorEmail", verifySponsor, 900);
+            attachDebouncedEvent("externalUserEmail", verifyExternalUser, 900);
         }
-        const data = await response.json();
 
-        if (data.clientPrincipal) {
-            const userId = data.clientPrincipal.userId;
-            const emailClaim = data.clientPrincipal.claims.find(claim => 
-                claim.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
-            );
-            const email = emailClaim ? emailClaim.val : "";
+        function attachDebouncedEvent(id, func, delay) {
+            document.getElementById(id).addEventListener("input", debounce(func, delay));
+        }
 
-            console.log("User Session Loaded:", { userId, email });
+        async function getUserSession() {
+            try {
+                const response = await fetch("/.auth/me");
+                if (!response.ok) return null;
 
-            if (email) {
-                document.getElementById("sponsorEmail").value = email;
-                document.getElementById("userId").value = userId; // ✅ Store in correct hidden field
-                verifySponsor(); // ✅ Auto-verify prefilled sponsor
+                const data = await response.json();
+                if (!data.clientPrincipal) return null;
+
+                return {
+                    userId: data.clientPrincipal.userId,
+                    email: data.clientPrincipal.claims.find(c => c.typ.includes("emailaddress"))?.val || ""
+                };
+            } catch (error) {
+                console.error("Error fetching session:", error);
+                return null;
+            }
+        }
+
+        function verifySponsor() {
+            let sponsorEmail = document.getElementById("sponsorEmail").value.trim();
+            let sponsorStatus = document.getElementById("sponsorStatus");
+            let sponsorIdField = document.getElementById("sponsorId");
+
+            if (!sponsorEmail) {
+                resetStatus(sponsorStatus, sponsorIdField);
+                return;
             }
 
-            return { userId, email };
-        } else {
-            console.log("No user session found.");
-            return null;
+            if (sponsorEmail.includes("#EXT#")) {
+                setStatusInvalid(sponsorStatus, sponsorIdField);
+                return;
+            }
+
+            setLoading(sponsorStatus);
+
+            fetch("https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: sponsorEmail }),
+            })
+            .then(response => response.ok ? response.json() : Promise.reject())
+            .then(data => setStatusValid(sponsorStatus, sponsorIdField, data.sponsorId))
+            .catch(() => setStatusInvalid(sponsorStatus, sponsorIdField))
+            .finally(checkSubmitButton);
         }
-    } catch (error) {
-        console.error("Error fetching user session:", error);
-        return null;
-    }
-    console.log("User session loaded", new Error().stack);
-}
 
-    
-document.addEventListener("DOMContentLoaded", function () {
-    getUserSession().then(user => {
-        if (user) {
-            console.log("User session retrieved:", user);
+        function verifyExternalUser() {
+            let email = document.getElementById("externalUserEmail").value.trim();
+            let externalUserStatus = document.getElementById("externalUserStatus");
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                setStatusInvalid(externalUserStatus);
+                return;
+            }
+
+            setLoading(externalUserStatus);
+
+            fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email }),
+            })
+            .then(response => response.status === 200 ? response.json() : Promise.reject())
+            .then(data => data.exists ? setStatusInvalid(externalUserStatus) : setStatusValid(externalUserStatus))
+            .catch(() => setStatusInvalid(externalUserStatus))
+            .finally(checkSubmitButton);
         }
-    });
-});
 
-// 🔹 Reset sponsor ID if the sponsor email is manually changed
-document.getElementById("sponsorEmail").addEventListener("input", function () {
-    document.getElementById("userId").value = "";
-});
-
-// Verify sponsor function (checks for #EXT# and API validation)
-function verifySponsor() {
-    let sponsorEmail = document.getElementById("sponsorEmail").value;
-    let sponsorStatus = document.getElementById("sponsorStatus");
-    let sponsorIdField = document.getElementById("sponsorId");
-
-    if (!sponsorEmail) {
-        sponsorStatus.innerHTML = "";
-        sponsorStatus.dataset.status = "invalid";
-        sponsorIdField.value = "";
-        checkSubmitButton();
-        return;
-    }
-
-    // If email contains "#EXT#", it's automatically invalid
-    if (sponsorEmail.includes("#EXT#")) {
-        sponsorStatus.innerHTML = '<div class="x-mark"></div>';
-        sponsorStatus.dataset.status = "invalid";
-        sponsorIdField.value = "";
-        checkSubmitButton();
-        return;
-    }
-
-    sponsorStatus.innerHTML = '<div class="loader"></div>';
-
-    fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {  
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: sponsorEmail })
-    })
-    .then(response => {
-        if (response.status === 200) {
-            sponsorStatus.innerHTML = '<div class="check"></div>'; // ✅ Sponsor exists
-            sponsorStatus.dataset.status = "valid";
-            return response.json();
-        } else {
-            sponsorStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Sponsor not found
-            sponsorStatus.dataset.status = "invalid";
-            sponsorIdField.value = "";
-            throw new Error('Sponsor not found');
+        function checkSubmitButton() {
+            let isValid = document.querySelectorAll(".status-icon.valid").length === 2;
+            document.getElementById("submitButton").disabled = !isValid;
         }
-    })
-    .then(data => {
-        sponsorIdField.value = data.sponsorId;
-        checkSubmitButton();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        sponsorStatus.innerHTML = '<div class="x-mark"></div>';
-        sponsorStatus.dataset.status = "invalid";
-        checkSubmitButton();
-    });
-}
 
-// Verify external user function (checks email format and API validation)
-function verifyExternalUser() {
-    let email = document.getElementById("externalUserEmail").value;
-    let externalUserStatus = document.getElementById("externalUserStatus");
-
-    if (!email) {
-        externalUserStatus.innerHTML = "";
-        externalUserStatus.dataset.status = "invalid"; // Mark as invalid
-        checkSubmitButton();
-        return;
-    }
-
-    // Email format validation
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Invalid format
-        externalUserStatus.dataset.status = "invalid";
-        checkSubmitButton();
-        return;
-    }
-
-    externalUserStatus.innerHTML = '<div class="loader"></div>';
-
-    fetch('https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk', {  
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
-    })
-    .then(response => {
-        if (response.status === 200) {
-            externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Email exists
-            externalUserStatus.dataset.status = "invalid";
-            checkSubmitButton();
-            return response.json();
-        } else if (response.status === 404) {
-            externalUserStatus.innerHTML = '<div class="check"></div>'; // ✅ Email available
-            externalUserStatus.dataset.status = "valid";
-            checkSubmitButton();
-            return null;
-        } else {
-            throw new Error('Unexpected status');
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Error case
-        externalUserStatus.dataset.status = "invalid";
-        checkSubmitButton();
-    });
-}
 
-// Form submission function (will only run if button is enabled)
-function submitForm(event) {
-    event.preventDefault(); // ✅ Prevent default form submission
-
-    const sponsorEmail = document.getElementById("sponsorEmail").value.trim();
-    const sponsorId = document.getElementById("userId").value; // ✅ Fetch hidden sponsor ID
-    const externalEmail = document.getElementById("externalEmail").value.trim();
-    const submitButton = document.getElementById("submitButton");
-
-    console.log("Submitting form...");
-    console.log("Sponsor Email:", sponsorEmail);
-    console.log("Sponsor ID:", sponsorId);
-    console.log("External Email:", externalEmail);
-
-    if (!sponsorId) {
-        alert("Sponsor ID is missing. Please verify the sponsor email.");
-        return;
-    }
-
-    if (!externalEmail || !validateEmail(externalEmail)) {
-        alert("Invalid or missing external email.");
-        return;
-    }
-
-    if (externalEmail.includes("#EXT#")) {
-        alert("External email cannot contain '#EXT#'.");
-        return;
-    }
-
-    submitButton.disabled = false;
-    document.getElementById("myForm").submit();
-}
-
-</script>
+        function setLoading(element) { element.className = "status-icon loading"; }
+        function setStatusValid(element, field, value) { element.className = "status-icon valid"; if (field) field.value = value; }
+        function setStatusInvalid(element, field) { element.className = "status-icon invalid"; if (field) field.value = ""; }
+        function resetStatus(element, field) { element.className = "status-icon"; if (field) field.value = ""; }
+    </script>
 </body>
 </html>
