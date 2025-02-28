@@ -315,7 +315,7 @@ form {
                 if (response.status === 200) {
                     sponsorStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
                     return response.json();
-                } else if (response.status === 403) {
+                } else if (response.status === 404) {
             sponsorStatus.innerHTML = '<div class="x-mark"></div>';
                     sponsorIdField.value = "";
                     throw new Error('Forbidden');
@@ -355,9 +355,10 @@ form {
             .then(response => {
                 console.log('Response status:', response.status);
                 if (response.status === 200) {
-                    externalUserStatus.innerHTML = '<div class="check"></div>';
-                } else if (response.status === 403) {
-            sponsorStatus.innerHTML = '<div class="x-mark"></div>';
+                    externalUserStatus.innerHTML = '<div class="x-mark"></div>';
+                } else if (response.status === 404) {
+                
+            externalUserStatus.innerHTML = '<div class="x-mark"></div>';
                 } else {
                     externalUserStatus.innerHTML = '';
                 }
