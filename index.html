@@ -160,6 +160,7 @@ form {
                 </div>
                 </label>
 <div class="input-container">
+    <input type="hidden" id="userId" name="userId" value="" />
     <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 900)">
     <div id="sponsorStatus" class="status-icon"></div>
 </div>
@@ -252,6 +253,19 @@ form {
             debounceTimeout = setTimeout(func, delay);
         }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fetch the user's email and ID from the server-side code
+        fetch('/getUserDetails')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("sponsorEmail").value = data.email;
+                document.getElementById("userId").value = data.id;
+            })
+            .catch(error => {
+                console.error('Error fetching user details:', error);
+            });
+    });
+
         function verifySponsor() {
             let sponsorEmail = document.getElementById("sponsorEmail").value;
             let sponsorStatus = document.getElementById("sponsorStatus");
@@ -317,11 +331,11 @@ form {
             .then(response => {
                 console.log('Response status:', response.status);
                 if (response.status === 200) {
-                    externalUserStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
+                    externalUserStatus.innerHTML = '<div class="check"></div>';
                 } else if (response.status === 403) {
             sponsorStatus.innerHTML = '<div class="x-mark"></div>';
                 } else {
-                    externalUserStatus.innerHTML = ''; // Remove question mark
+                    externalUserStatus.innerHTML = '';
                 }
             })
             .catch(error => {
