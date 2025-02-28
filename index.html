@@ -328,6 +328,7 @@ async function getUserSession() {
         console.error("Error fetching user session:", error);
         return null;
     }
+    console.log("User session loaded", new Error().stack);
 }
 
     
