@@ -245,16 +245,27 @@ form {
         </form>
     </div>
     <script>
-document.addEventListener("DOMContentLoaded", async function() {
-    await getUserSession(); // Ensure user session is loaded first
+document.addEventListener("DOMContentLoaded", async function () {
+    // Fetch user session first
+    const session = await getUserSession();
+    if (!session) {
+        console.warn("No user session found. Blocking form interactions.");
+        return;
+    }
+
+    // Set sponsor email field with logged-in user email
+    let sponsorEmailField = document.getElementById("sponsorEmail");
+    sponsorEmailField.value = session.email;
+    document.getElementById("userId").value = session.userId;
+
+    // Immediately verify the prepopulated sponsor email
+    verifySponsor();
 
     // Attach event listeners
-    document.getElementById("sponsorEmail").addEventListener("input", debounce(verifySponsor, 900));
+    sponsorEmailField.addEventListener("input", debounce(verifySponsor, 900));
     document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
-    document.getElementById("sponsorId").addEventListener("input", checkSubmitButton);
-    document.getElementById("externalUserEmail").addEventListener("input", checkSubmitButton);
 
-    checkSubmitButton(); // Run check on load to disable submit initially
+    checkSubmitButton(); // Run initial check
 });
 
 // Debounce function to optimize API calls
@@ -266,16 +277,16 @@ function debounce(func, delay) {
     };
 }
 
-// Function to enable/disable submit button based on conditions
+// Function to enable/disable submit button based on BOTH sponsor and external user status
 function checkSubmitButton() {
-    let sponsorId = document.getElementById("sponsorId").value;
+    let sponsorStatus = document.getElementById("sponsorStatus").dataset.status; // "valid" or "invalid"
     let externalUserStatus = document.getElementById("externalUserStatus").dataset.status; // "valid" or "invalid"
     let submitButton = document.getElementById("submitButton");
 
-    if (!sponsorId || externalUserStatus === "invalid") {
-        submitButton.disabled = true;
-    } else {
+    if (sponsorStatus === "valid" && externalUserStatus === "valid") {
         submitButton.disabled = false;
+    } else {
+        submitButton.disabled = true;
     }
 }
 
@@ -284,7 +295,8 @@ async function getUserSession() {
     try {
         const response = await fetch("/.auth/me");
         if (!response.ok) {
-            throw new Error(`Session fetch failed: ${response.status}`);
+            console.error(`Session fetch failed: ${response.status}`);
+            return null;
         }
         const data = await response.json();
 
@@ -295,11 +307,7 @@ async function getUserSession() {
             );
             const email = emailClaim ? emailClaim.val : "";
 
-            console.log("User ID:", userId);
-            console.log("User Email:", email);
-
-            document.getElementById("sponsorEmail").value = email;
-            document.getElementById("userId").value = userId;
+            console.log("User Session Loaded:", { userId, email });
 
             return { userId, email };
         } else {
@@ -312,7 +320,7 @@ async function getUserSession() {
     }
 }
 
-// Verify sponsor function (checks for #EXT#)
+// Verify sponsor function (checks for #EXT# and API validation)
 function verifySponsor() {
     let sponsorEmail = document.getElementById("sponsorEmail").value;
     let sponsorStatus = document.getElementById("sponsorStatus");
@@ -320,13 +328,16 @@ function verifySponsor() {
 
     if (!sponsorEmail) {
         sponsorStatus.innerHTML = "";
+        sponsorStatus.dataset.status = "invalid";
         sponsorIdField.value = "";
         checkSubmitButton();
         return;
     }
 
+    // If email contains "#EXT#", it's automatically invalid
     if (sponsorEmail.includes("#EXT#")) {
         sponsorStatus.innerHTML = '<div class="x-mark"></div>';
+        sponsorStatus.dataset.status = "invalid";
         sponsorIdField.value = "";
         checkSubmitButton();
         return;
@@ -334,7 +345,7 @@ function verifySponsor() {
 
     sponsorStatus.innerHTML = '<div class="loader"></div>';
 
-    fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {  
+    fetch('/api/verify-sponsor', {  
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: sponsorEmail })
@@ -342,9 +353,11 @@ function verifySponsor() {
     .then(response => {
         if (response.status === 200) {
             sponsorStatus.innerHTML = '<div class="check"></div>'; // ✅ Sponsor exists
+            sponsorStatus.dataset.status = "valid";
             return response.json();
         } else {
             sponsorStatus.innerHTML = '<div class="x-mark"></div>'; // ❌ Sponsor not found
+            sponsorStatus.dataset.status = "invalid";
             sponsorIdField.value = "";
             throw new Error('Sponsor not found');
         }
@@ -355,11 +368,13 @@ function verifySponsor() {
     })
     .catch(error => {
         console.error('Error:', error);
+        sponsorStatus.innerHTML = '<div class="x-mark"></div>';
+        sponsorStatus.dataset.status = "invalid";
         checkSubmitButton();
     });
 }
 
-// Verify external user function (checks email format)
+// Verify external user function (checks email format and API validation)
 function verifyExternalUser() {
     let email = document.getElementById("externalUserEmail").value;
     let externalUserStatus = document.getElementById("externalUserStatus");
@@ -382,7 +397,7 @@ function verifyExternalUser() {
 
     externalUserStatus.innerHTML = '<div class="loader"></div>';
 
-    fetch('https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk', {  
+    fetch('/api/verify-external-user', {  
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email })
@@ -410,7 +425,7 @@ function verifyExternalUser() {
     });
 }
 
-// Form submission function (won't run if button is disabled)
+// Form submission function (will only run if button is enabled)
 function submitForm() {
     let sponsorEmail = document.getElementById("sponsorEmail").value;
     let email = document.getElementById("externalUserEmail").value;
@@ -425,7 +440,6 @@ function submitForm() {
         alert("Please fill in all fields before submitting.");
         return;
     }
-
     console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
 }
 </script>
