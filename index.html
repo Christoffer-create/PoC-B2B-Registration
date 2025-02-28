@@ -22,15 +22,12 @@
             padding: 3%;
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 65%;
-        }
-        .input-container {
-            display: flex;
+            text            display: flex;
             align-items: center;
+            justify-content: center;
         }
-        .input-container input {
-            flex-grow: 1;
+        .input-container input, .input-container select {
+            width: 75%; /* Set fixed width */
             padding: 1%;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -55,6 +52,10 @@
             transform: rotate(45deg);
             margin-left: 2%;
         }
+        .input-group-append {
+            margin-left: 1.5%;
+            margin-top: 0.5%;
+        }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -67,44 +68,54 @@
         <form>
             <div class="form-group">
                 <label for="sponsorEmail">Sponsor Email:</label>
-                <div class="input-group">
+                <div class="input-container">
                     <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 500)">
                     <div id="sponsorStatus" class="input-group-append"></div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="externalUserEmail">External User Email:</label>
-                <div class="input-group">
+                <div class="input-container">
                     <input type="email" class="form-control" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 500)">
                     <div id="externalUserStatus" class="input-group-append"></div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="firstName">First Name:</label>
-                <input type="text" class="form-control" id="firstName">
+                <div class="input-container">
+                    <input type="text" class="form-control" id="firstName">
+                </div>
             </div>
             <div class="form-group">
                 <label for="lastName">Last Name:</label>
-                <input type="text" class="form-control" id="lastName">
+                <div class="input-container">
+                    <input type="text" class="form-control" id="lastName">
+                </div>
             </div>
             <div class="form-group">
                 <label for="phoneNumber">Phone Number:</label>
-                <input type="text" class="form-control" id="phoneNumber">
+                <div class="input-container">
+                    <input type="text" class="form-control" id="phoneNumber">
+                </div>
             </div>
             <div class="form-group">
                 <label for="company">Company:</label>
-                <input type="text" class="form-control" id="company">
+                <div class="input-container">
+                    <input type="text" class="form-control" id="company">
+                </div>
             </div>
             <div class="form-group">
                 <label for="usageLocation">Usage Location:</label>
-                <select class="form-control" id="usageLocation">
-                    <option value="US">United States</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="SE">Sweden</option>
-                    <option value="NO">Norway</option>
-                    <option value="DK">Denmark</option>
-                    <option value="FI">Finland</option>
-                </select>
+                <div class="input-container">
+                    <select class="form-control" id="usageLocation">
+                        <option value="US">United States</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="SE">Sweden</option>
+                        <option value="NO">Norway</option>
+                        <option value="DK">Denmark</option>
+                        <option value="FI">Finland</option>
+                    </select>
+                </div>
             </div>
             <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
             <input type="hidden" id="sponsorId" name="sponsorId">
@@ -130,7 +141,8 @@
             }
             sponsorStatus.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
             
-            fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
+            // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
+            fetch('YOUR_LOGIC_APP_URL', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -147,7 +159,7 @@
                     sponsorIdField.value = "";
                     throw new Error('Forbidden');
                 } else {
-                    sponsorStatus.innerHTML = '❓'; // Question mark for other statuses
+                    sponsorStatus.innerHTML = ''; // Remove question mark
                     sponsorIdField.value = "";
                     throw new Error('Unexpected status');
                 }
@@ -187,7 +199,7 @@
                 } else if (response.status === 403) {
                     externalUserStatus.innerHTML = '❌'; // Red X mark emoji
                 } else {
-                    externalUserStatus.innerHTML = '❓'; // Question mark for other statuses
+                    externalUserStatus.innerHTML = ''; // Remove question mark
                 }
             })
             .catch(error => {
