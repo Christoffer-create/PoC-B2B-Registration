@@ -71,11 +71,43 @@ form {
     width: 20px;
     position: relative;
 }
-        .info-icon {
+.x-mark::before, .x-mark::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: red;
+}
+.x-mark::before {
+    transform: rotate(45deg);
+    left: 50%;
+    top: 0;
+    transform-origin: center;
+}
+.x-mark::after {
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 0;
+    transform-origin: center;
+}
+.input-group-append {
+    margin-left: 1.5%;
+    margin-top: 0.5%;
+}
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.info-icon {
     margin-left: 5px;
     cursor: pointer;
     position: relative;
     display: inline-block;
+    color: #143275; /* Custom color */
 }
 
 .info-icon .tooltip-text {
@@ -110,37 +142,6 @@ form {
     visibility: visible;
     opacity: 1;
 }
-.x-mark::before, .x-mark::after {
-    content: '';
-    position: absolute;
-    width: 3px;
-    height: 20px;
-    background-color: red;
-}
-.x-mark::before {
-    transform: rotate(45deg);
-    left: 50%;
-    top: 0;
-    transform-origin: center;
-}
-.x-mark::after {
-    transform: rotate(-45deg);
-    left: 50%;
-    top: 0;
-    transform-origin: center;
-}
-.input-group-append {
-    margin-left: 1.5%;
-    margin-top: 0.5%;
-}
-@-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
     </style>
 </head>
 <body>
@@ -148,69 +149,80 @@ form {
         <h2>External User Registration</h2>
         <form>
             <div class="form-group">
-                <label for="sponsorEmail">Sponsor Email:</label>
-<div class="input-container">
-    <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 900)">
-    <div id="sponsorStatus" class="status-icon"></div>
+                <label for="sponsorEmail">Sponsor Email
                     <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">Enter the email of the sponsor, the person from Skanska who the guest user reports to.</span>
                 </div>
+                </label>
+<div class="input-container">
+    <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 900)">
+    <div id="sponsorStatus" class="status-icon"></div>
 </div>
             </div>
             <div class="form-group">
-                <label for="externalUserEmail">External User Email:</label>
-                <div class="input-container">
-                    <input type="email" class="form-control" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 900)">
-                    <div id="externalUserStatus" class="status-icon"></div>
-                                    <div class="info-icon">
+                <label for="externalUserEmail">External User Email
+                    <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">Enter the email of the external user.</span>
                 </div>
+                </label>
+                <div class="input-container">
+                    <input type="email" class="form-control" id="externalUserEmail" onkeyup="debounce(verifyExternalUser, 900)">
+                    <div id="externalUserStatus" class="status-icon"></div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="firstName">First Name:</label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="firstName">
-                                    <div class="info-icon">
+                <label for="firstName">First Name
+                    <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">Enter the first name of the user.</span>
                 </div>
+                </label>
+                <div class="input-container">
+                    <input type="text" class="form-control" id="firstName">
                 </div>
             </div>
             <div class="form-group">
-                <label for="lastName">Last Name:</label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="lastName">
-                                    <div class="info-icon">
+                <label for="lastName">Last Name 
+                     <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">Enter the last name of the user.</span>
                 </div>
+                
+                </label>
+                <div class="input-container">
+                    <input type="text" class="form-control" id="lastName">
                 </div>
             </div>
             <div class="form-group">
                 <label for="phoneNumber">Phone Number:</label>
                 <div class="input-container">
                     <input type="text" class="form-control" id="phoneNumber">
-                                    <div class="info-icon">
+                     <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">Enter the phone number of the user.</span>
                 </div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="company">Company:</label>
-                <div class="input-container">
-                    <input type="text" class="form-control" id="company">
-                                    <div class="info-icon">
+                <label for="company">Company
+                    <div class="info-icon">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">Enter the company name.</span>
                 </div>
+                </label>
+                <div class="input-container">
+                    <input type="text" class="form-control" id="company">
                 </div>
             </div>
             <div class="form-group">
-                <label for="usageLocation">Usage Location:</label>
+                <label for="usageLocation">Usage Location
+                    <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="tooltip-text">Select the usage location, which Business unit the account is used in.</span>
+                </div>
+                </label>
                 <div class="input-container">
                     <select class="form-control" id="usageLocation">
                         <option value="US">United States</option>
@@ -220,10 +232,6 @@ form {
                         <option value="DK">Denmark</option>
                         <option value="FI">Finland</option>
                     </select>
-                                    <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="tooltip-text">Select the usage location, which Business unit the account is used in.</span>
-                </div>
                 </div>
             </div>
             <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
