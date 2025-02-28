@@ -339,7 +339,7 @@ function verifyExternalUser() {
     })
     .then(data => {
         console.log("API Response:", data); 
-        if (data.exists) {
+        if (data.externalUserEmail) {
             setStatusInvalid(externalUserStatus);
         } else {
             setStatusValid(externalUserStatus);
