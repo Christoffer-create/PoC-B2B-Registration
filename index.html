@@ -173,7 +173,7 @@
                     </div>
                 </label>
                 <div class="input-container">
-                    <input type="hidden" id="userId" name="userId" value="" />
+                    <input type="hidden" id="sponsorId" name="sponsorId">
                     <input type="email" class="form-control" id="sponsorEmail">
                     <div id="sponsorStatus" class="status-icon"></div>
                 </div>
@@ -303,8 +303,9 @@
         })
         .then(response => response.ok ? response.json() : Promise.reject())
         .then(data => {
-            setStatusValid(sponsorStatus);
             sponsorIdField.value = data.sponsorId;
+            setStatusValid(sponsorStatus);
+            
         })
         .catch(() => {
             setStatusInvalid(sponsorStatus);
