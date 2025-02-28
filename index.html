@@ -283,36 +283,53 @@
         }
     }
 
-    function verifySponsor() {
-        let sponsorEmail = document.getElementById("sponsorEmail").value.trim();
-        let sponsorStatus = document.getElementById("sponsorStatus");
-        let sponsorIdField = document.getElementById("sponsorId");
+function verifySponsor() {
+    let sponsorEmail = document.getElementById("sponsorEmail").value.trim();
+    let sponsorStatus = document.getElementById("sponsorStatus");
+    let sponsorIdField = document.getElementById("sponsorId"); // 🚨 Check if this exists
 
-        if (!sponsorEmail || sponsorEmail.includes("#EXT#")) {
-            setStatusInvalid(sponsorStatus);
-            sponsorIdField.value = "";
-            return;
-        }
-
-        setLoading(sponsorStatus);
-
-        fetch("https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: sponsorEmail }),
-        })
-        .then(response => response.ok ? response.json() : Promise.reject())
-        .then(data => {
-            sponsorIdField.value = data.sponsorId;
-            setStatusValid(sponsorStatus);
-            
-        })
-        .catch(() => {
-            setStatusInvalid(sponsorStatus);
-            sponsorIdField.value = "";
-        })
-        .finally(checkSubmitButton);
+    if (!sponsorIdField) {
+        console.error("🚨 Error: sponsorId input field is missing in the HTML.");
+        return; // Stop execution if the field doesn't exist
     }
+
+    if (!sponsorEmail || sponsorEmail.includes("#EXT#")) {
+        console.warn("❌ Invalid sponsor email.");
+        setStatusInvalid(sponsorStatus);
+        sponsorIdField.value = ""; // Clear previous value
+        return;
+    }
+
+    setLoading(sponsorStatus);
+
+    fetch("https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc", {  // ✅ Add your actual API URL
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: sponsorEmail }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("❌ Sponsor not found.");
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.sponsorUserId) {  // ✅ Match the API response field name
+            console.log("✅ Sponsor Verified, ID:", data.sponsorUserId);
+            sponsorIdField.value = data.sponsorUserId; // ✅ Store the sponsor ID
+            setStatusValid(sponsorStatus);
+        } else {
+            throw new Error("❌ No sponsor ID returned.");
+        }
+    })
+    .catch(error => {
+        console.error("🚨 Error verifying sponsor:", error);
+        setStatusInvalid(sponsorStatus);
+        sponsorIdField.value = ""; // Clear the field on error
+    })
+    .finally(checkSubmitButton);
+}
+
 
 function verifyExternalUser() {
     let emailField = document.getElementById("externalUserEmail");
