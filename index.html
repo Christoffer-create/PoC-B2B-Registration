@@ -249,6 +249,8 @@ form {
         </form>
     </div>
     <script>
+    let sessionLoaded = false;
+        
 document.addEventListener("DOMContentLoaded", async function () {
     // Fetch user session first
     const session = await getUserSession();
@@ -296,6 +298,8 @@ function checkSubmitButton() {
 
 // Function to fetch user session
 async function getUserSession() {
+    if (sessionLoaded) return; // Prevent duplicate calls
+    sessionLoaded = true; // Mark session as loaded
     try {
         const response = await fetch("/.auth/me");
         if (!response.ok) {
