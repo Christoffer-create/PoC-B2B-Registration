@@ -63,6 +63,41 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .check {
+    height: 20px;
+    width: 8px;
+    border-bottom: 3px solid green;
+    border-right: 3px solid green;
+    transform: rotate(45deg);
+}
+
+.x-mark {
+    height: 20px;
+    width: 20px;
+    position: relative;
+}
+
+.x-mark::before, .x-mark::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background-color: red;
+}
+
+.x-mark::before {
+    transform: rotate(45deg);
+    left: 50%;
+    top: 0;
+    transform-origin: center;
+}
+
+.x-mark::after {
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 0;
+    transform-origin: center;
+}
     </style>
 </head>
 <body>
@@ -145,7 +180,7 @@
             sponsorStatus.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
             
             // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
-            fetch('YOUR_LOGIC_APP_URL', {
+            fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -158,7 +193,7 @@
                     sponsorStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
                     return response.json();
                 } else if (response.status === 403) {
-                    sponsorStatus.innerHTML = '❌'; // Red X mark emoji
+            statusElement.innerHTML = '<div class="x-mark"></div>';
                     sponsorIdField.value = "";
                     throw new Error('Forbidden');
                 } else {
@@ -173,7 +208,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                sponsorStatus.innerHTML = '❌'; // Red X mark emoji for errors
+            statusElement.innerHTML = '<div class="x-mark"></div>';
                 sponsorIdField.value = "";
             });
         }
@@ -200,14 +235,14 @@
                 if (response.status === 200) {
                     externalUserStatus.innerHTML = '<div class="check"></div>'; // Custom green check mark
                 } else if (response.status === 403) {
-                    externalUserStatus.innerHTML = '❌'; // Red X mark emoji
+            statusElement.innerHTML = '<div class="x-mark"></div>';
                 } else {
                     externalUserStatus.innerHTML = ''; // Remove question mark
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                externalUserStatus.innerHTML = '❌'; // Red X mark emoji for errors
+            statusElement.innerHTML = '<div class="x-mark"></div>';
             });
         }
 
