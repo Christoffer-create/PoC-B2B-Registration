@@ -194,7 +194,8 @@
         </form>
     </div>
 
-    <script>
+   <script>
+    // ✅ Define debounce function before it's used
     function debounce(func, delay) {
         let timer;
         return function (...args) {
@@ -202,34 +203,112 @@
             timer = setTimeout(() => func.apply(this, args), delay);
         };
     }
-        async function getUserSession() {
-            try {
-                const response = await fetch("/.auth/me");
-                if (!response.ok) return null;
 
-                const data = await response.json();
-                if (!data.clientPrincipal) return null;
+    async function getUserSession() {
+        try {
+            const response = await fetch("/.auth/me");
+            if (!response.ok) return null;
 
-                let userId = data.clientPrincipal.userId;
-                let email = data.clientPrincipal.claims.find(c => c.typ.includes("emailaddress"))?.val || "";
+            const data = await response.json();
+            if (!data.clientPrincipal) return null;
 
-                document.getElementById("sponsorEmail").value = email;
-                document.getElementById("userId").value = userId;  
+            let userId = data.clientPrincipal.userId;
+            let email = data.clientPrincipal.claims.find(c => c.typ.includes("emailaddress"))?.val || "";
 
-                return { userId, email };
-            } catch (error) {
-                console.error("Error fetching session:", error);
-                return null;
+            document.getElementById("sponsorEmail").value = email;
+            document.getElementById("userId").value = userId;  
+
+            return { userId, email };
+        } catch (error) {
+            console.error("Error fetching session:", error);
+            return null;
+        }
+    }
+
+    function verifySponsor() {
+        let sponsorEmail = document.getElementById("sponsorEmail").value.trim();
+        let sponsorStatus = document.getElementById("sponsorStatus");
+        let sponsorIdField = document.getElementById("sponsorId");
+
+        if (!sponsorEmail || sponsorEmail.includes("#EXT#")) {
+            setStatusInvalid(sponsorStatus);
+            sponsorIdField.value = "";
+            return;
+        }
+
+        setLoading(sponsorStatus);
+
+        fetch("https://your-api-url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: sponsorEmail }),
+        })
+        .then(response => response.ok ? response.json() : Promise.reject())
+        .then(data => {
+            setStatusValid(sponsorStatus);
+            sponsorIdField.value = data.sponsorId;
+        })
+        .catch(() => {
+            setStatusInvalid(sponsorStatus);
+            sponsorIdField.value = "";
+        })
+        .finally(checkSubmitButton);
+    }
+
+    function verifyExternalUser() {
+        let email = document.getElementById("externalUserEmail").value.trim();
+        let externalUserStatus = document.getElementById("externalUserStatus");
+
+        if (!email) {
+            setStatusInvalid(externalUserStatus);
+            return;
+        }
+
+        setLoading(externalUserStatus);
+
+        fetch("https://your-api-url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email }),
+        })
+        .then(response => response.ok ? response.json() : Promise.reject())
+        .then(data => {
+            if (data.exists) {
+                setStatusInvalid(externalUserStatus);
+            } else {
+                setStatusValid(externalUserStatus);
             }
-        }
+        })
+        .catch(() => {
+            setStatusInvalid(externalUserStatus);
+        })
+        .finally(checkSubmitButton);
+    }
 
-        async function init() {
-            await getUserSession();
-            document.getElementById("sponsorEmail").addEventListener("input", debounce(verifySponsor, 900));
-            document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
-        }
+    function setLoading(element) {
+        element.innerHTML = '<div class="loader"></div>';
+    }
 
-        document.addEventListener("DOMContentLoaded", init);
-    </script>
+    function setStatusValid(element) {
+        element.innerHTML = '<div class="check"></div>';
+    }
+
+    function setStatusInvalid(element) {
+        element.innerHTML = '<div class="x-mark"></div>';
+    }
+
+    function checkSubmitButton() {
+        let isValid = document.querySelectorAll(".check").length === 2;
+        document.getElementById("submitButton").disabled = !isValid;
+    }
+
+    async function init() {
+        await getUserSession();
+        document.getElementById("sponsorEmail").addEventListener("input", debounce(verifySponsor, 900));
+        document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+</script>
 </body>
 </html>
