@@ -342,7 +342,7 @@ function verifyExternalUser() {
             return null; // Don't parse JSON if not needed
         } 
         
-        if (response.status === 403) {
+        if (response.status === 404) {
             console.info("✅ Email is available.");
             setStatusValid(externalUserStatus); // Show ✅ if email is available
             return null;
