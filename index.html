@@ -6,77 +6,63 @@
     <title>External User Registration</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #143275;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: white;
-            color: black;
-            padding: 3%;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 65%;
-        }
-        .input-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .input-container input, .input-container select {
-            width: 75%; /* Set fixed width */
-            padding: 1%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .input-container .status-icon {
-            margin-left: 1.5%;
-            font-size: 1.5rem;
-        }
-        .input-container .loading {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 2s linear infinite;
-        }
-        .check {
-            height: 20px;
-            width: 8px;
-            border-bottom: 3px solid green;
-            border-right: 3px solid green;
-            transform: rotate(45deg);
-        }
-        .input-group-append {
-            margin-left: 1.5%;
-            margin-top: 0.5%;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .check {
+body {
+    font-family: Arial, sans-serif;
+    background-color: #143275;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    background: white;
+    color: black;
+    padding: 3%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 65%;
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjust to space-between */
+}
+.input-container input, .input-container select {
+    width: calc(75% - 25px); /* Adjust width to account for status icon */
+    padding: 1%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.status-icon {
+    width: 25px; /* Set a fixed width for the status icon */
+    height: 25px; /* Set a fixed height for the status icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loading {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+.check {
     height: 20px;
     width: 8px;
     border-bottom: 3px solid green;
     border-right: 3px solid green;
     transform: rotate(45deg);
 }
-
 .x-mark {
     height: 20px;
     width: 20px;
     position: relative;
 }
-
 .x-mark::before, .x-mark::after {
     content: '';
     position: absolute;
@@ -84,19 +70,25 @@
     height: 20px;
     background-color: red;
 }
-
 .x-mark::before {
     transform: rotate(45deg);
     left: 50%;
     top: 0;
     transform-origin: center;
 }
-
 .x-mark::after {
     transform: rotate(-45deg);
     left: 50%;
     top: 0;
     transform-origin: center;
+}
+.input-group-append {
+    margin-left: 1.5%;
+    margin-top: 0.5%;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
     </style>
 </head>
@@ -106,10 +98,10 @@
         <form>
             <div class="form-group">
                 <label for="sponsorEmail">Sponsor Email:</label>
-                <div class="input-container">
-                    <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 500)">
-                    <div id="sponsorStatus" class="status-icon"></div>
-                </div>
+<div class="input-container">
+    <input type="email" class="form-control" id="sponsorEmail" onkeyup="debounce(verifySponsor, 900)">
+    <div id="sponsorStatus" class="status-icon"></div>
+</div>
             </div>
             <div class="form-group">
                 <label for="externalUserEmail">External User Email:</label>
