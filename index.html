@@ -46,12 +46,13 @@ form {
     align-items: center;
     justify-content: center;
 }
-.loading {
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #3498db;
+.loader {
+    border: 4px solid #f3f3f3; /* Adjusted border size for smaller loader */
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    border-top: 4px solid #143275; /* Custom color */
+    width: 20px; /* Adjusted size for smaller loader */
+    height: 20px; /* Adjusted size for smaller loader */
+    -webkit-animation: spin 2s linear infinite; /* Safari */
     animation: spin 2s linear infinite;
 }
 .check {
@@ -88,6 +89,10 @@ form {
 .input-group-append {
     margin-left: 1.5%;
     margin-top: 0.5%;
+}
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
 }
 @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -172,7 +177,7 @@ form {
                 sponsorIdField.value = "";
                 return;
             }
-            sponsorStatus.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
+              sponsorStatus.innerHTML = '<div class="loader"></div>';
             
             // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
             fetch('https://prod-144.westeurope.logic.azure.com:443/workflows/7a097d990a4847d19bf87b534098979d/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=eMEoDsIKXzBRk4vIBsvjPay6D5TqTGdA3rbgQp43Soc', {
@@ -215,7 +220,7 @@ form {
                 externalUserStatus.innerHTML = "";
                 return;
             }
-            externalUserStatus.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>';
+            externalUserStatus.innerHTML = '<div class="loader"></div>';
             
             // Replace 'YOUR_LOGIC_APP_URL' with your actual Logic App URL
             fetch('YOUR_LOGIC_APP_URL', {
