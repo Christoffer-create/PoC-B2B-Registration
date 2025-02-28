@@ -87,6 +87,35 @@
             transform-origin: center;
         }
 
+        .info-icon {
+            margin-left: 5px;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            color: #143275;
+        }
+
+        .info-icon .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .info-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -102,7 +131,12 @@
         <h2>External User Registration</h2>
         <form id="myForm">
             <div class="form-group">
-                <label for="sponsorEmail">Sponsor Email</label>
+                <label for="sponsorEmail">Sponsor Email 
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="tooltip-text">Enter the sponsor's email.</span>
+                    </div>
+                </label>
                 <div class="input-container">
                     <input type="hidden" id="userId" name="userId" value="" />
                     <input type="email" class="form-control" id="sponsorEmail">
@@ -111,7 +145,12 @@
             </div>
 
             <div class="form-group">
-                <label for="externalUserEmail">External User Email</label>
+                <label for="externalUserEmail">External User Email
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="tooltip-text">Enter the external user's email.</span>
+                    </div>
+                </label>
                 <div class="input-container">
                     <input type="email" class="form-control" id="externalUserEmail">
                     <div id="externalUserStatus" class="status-icon"></div>
@@ -156,64 +195,34 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            await init();
-        });
+        async function getUserSession() {
+            try {
+                const response = await fetch("/.auth/me");
+                if (!response.ok) return null;
+
+                const data = await response.json();
+                if (!data.clientPrincipal) return null;
+
+                let userId = data.clientPrincipal.userId;
+                let email = data.clientPrincipal.claims.find(c => c.typ.includes("emailaddress"))?.val || "";
+
+                document.getElementById("sponsorEmail").value = email;
+                document.getElementById("userId").value = userId;  
+
+                return { userId, email };
+            } catch (error) {
+                console.error("Error fetching session:", error);
+                return null;
+            }
+        }
 
         async function init() {
-            const session = await getUserSession();
-            if (!session) return;
-
-            document.getElementById("sponsorEmail").value = session.email;
-            document.getElementById("userId").value = session.userId;
-
-            verifySponsor();
-            attachDebouncedEvent("sponsorEmail", verifySponsor, 900);
-            attachDebouncedEvent("externalUserEmail", verifyExternalUser, 900);
+            await getUserSession();
+            document.getElementById("sponsorEmail").addEventListener("input", debounce(verifySponsor, 900));
+            document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
         }
 
-        function verifySponsor() {
-            let sponsorEmail = document.getElementById("sponsorEmail").value.trim();
-            let sponsorStatus = document.getElementById("sponsorStatus");
-
-            if (!sponsorEmail || sponsorEmail.includes("#EXT#")) {
-                setStatusInvalid(sponsorStatus);
-                return;
-            }
-
-            setLoading(sponsorStatus);
-
-            fetch("https://your-api-url", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: sponsorEmail }),
-            })
-            .then(response => response.ok ? response.json() : Promise.reject())
-            .then(data => setStatusValid(sponsorStatus))
-            .catch(() => setStatusInvalid(sponsorStatus))
-            .finally(checkSubmitButton);
-        }
-
-        function setLoading(element) { element.innerHTML = '<div class="loader"></div>'; }
-        function setStatusValid(element) { element.innerHTML = '<div class="check"></div>'; }
-        function setStatusInvalid(element) { element.innerHTML = '<div class="x-mark"></div>'; }
-
-        function attachDebouncedEvent(id, func, delay) {
-            document.getElementById(id).addEventListener("input", debounce(func, delay));
-        }
-
-        function debounce(func, delay) {
-            let timer;
-            return function (...args) {
-                clearTimeout(timer);
-                timer = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
-
-        function checkSubmitButton() {
-            let isValid = document.querySelectorAll(".check").length === 2;
-            document.getElementById("submitButton").disabled = !isValid;
-        }
+        document.addEventListener("DOMContentLoaded", init);
     </script>
 </body>
 </html>
