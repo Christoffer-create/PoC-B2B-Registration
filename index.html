@@ -434,44 +434,51 @@ function verifyExternalUser() {
     document.addEventListener("DOMContentLoaded", init);
         document.getElementById("submitButton").addEventListener("click", submitForm);
 
-    function submitForm(event) {
-        event.preventDefault(); // Prevents default form submission
+function submitForm(event) {
+    event.preventDefault(); // Prevents default form submission
 
-        const formData = {
-            sponsorUserId: document.getElementById("sponsorId").value,
-            externalUserEmail: document.getElementById("externalUserEmail").value.trim(),
-            givenName: document.getElementById("firstName").value.trim(),
-            lastName: document.getElementById("lastName").value.trim(),
-            phoneNumber: document.getElementById("phoneNumber").value.trim(),
-            company: document.getElementById("company").value.trim(),
-            usageLocation: document.getElementById("usageLocation").value // 
-        };
+    const formData = {
+        sponsorUserId: document.getElementById("sponsorId").value.trim(),
+        sponsorEmail: document.getElementById("sponsorEmail").value.trim(),
+        externalUserEmail: document.getElementById("externalUserEmail").value.trim(),
+        givenName: document.getElementById("firstName").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
+        phoneNumber: document.getElementById("phoneNumber").value.trim(),
+        company: document.getElementById("company").value.trim(),
+        usageLocation: document.getElementById("usageLocation").value
+    };
 
-        console.log("Submitting data:", formData); // 
+    console.log("Submitting data:", formData); // ✅ Debugging output
 
-        
-        fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to submit data.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Success:", data);
-            alert("Form submitted successfully!");
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("There was an error submitting the form.");
-        });
-    }
+    fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        console.log("Response Status:", response.status);
+
+        if (!response.ok) {  
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            return response.json();  // ✅ Safely parse JSON response
+        } else {
+            console.warn("⚠ Response is not JSON.");
+            return { message: "Form submitted successfully, but response is not JSON." };
+        }
+    })
+    .then(data => {
+        console.log("✅ Success:", data);
+        alert(data.message || "Form submitted successfully!");
+    })
+    .catch(error => {
+        console.error("🚨 Error:", error);
+        alert("There was an error submitting the form.");
+    });
+}
 </script>
 </body>
 </html>
