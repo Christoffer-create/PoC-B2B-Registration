@@ -318,7 +318,7 @@ function verifyExternalUser() {
     let email = emailField.value.trim();
     let externalUserStatus = document.getElementById("externalUserStatus");
 
-    console.log("Verifying External Email:", email); 
+    console.log("Verifying External Email:", email); // ✅ Debugging log
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         console.warn("⚠ Invalid email format or empty field.");
@@ -336,29 +336,30 @@ function verifyExternalUser() {
     .then(response => {
         console.log("Response Status:", response.status);
 
-        if (!response.ok) {
-            if (response.status === 404) {
-                console.info("✅ Email is available.");
-                setStatusValid(externalUserStatus);
-                return null;
-            }
+        // ✅ If 201, treat it as "email available" (✅)
+        if (response.status === 201) {
+            console.info("✅ Email is available.");
+            setStatusValid(externalUserStatus);
+            return null;
+        }
 
-            console.warn("❌ Unexpected error, treating email as taken.");
+        // ✅ If 200, treat it as "email already taken" (❌)
+        if (response.status === 200) {
+            console.info("❌ Email is already taken.");
             setStatusInvalid(externalUserStatus);
             return null;
         }
 
-        // ✅ If response is 200, the email is taken
-        console.info("❌ Email is already taken.");
-        setStatusInvalid(externalUserStatus);
-        return null;
+        // ❌ For any other unexpected errors, log & show X
+        throw new Error("Unexpected response status: " + response.status);
     })
     .catch(error => {
         console.error("🚨 Unexpected error verifying email:", error);
-        setStatusInvalid(externalUserStatus); 
+        setStatusInvalid(externalUserStatus);
     })
     .finally(checkSubmitButton);
 }
+
 
 
 
