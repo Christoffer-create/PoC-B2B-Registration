@@ -352,22 +352,21 @@ form {
                 },
                 body: JSON.stringify({ email: email })
             })
-            .then(response => {
-                console.log('Response status:', response.status);
-                if (response.status === 200) {
-                    externalUserStatus.innerHTML = '<div class="x-mark"></div>';
-                    return response.json();
-                } else if (response.status === 404) {        
+               .then(response => {
+        if (response.status === 200) {
+            externalUserStatus.innerHTML = '<div class="x-mark"></div>';
+            return response.json();
+        } else if (response.status === 404) {
             externalUserStatus.innerHTML = '<div class="check"></div>';
-                    return null;
-                } else {
-                    externalUserStatus.innerHTML = '';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            sponsorStatus.innerHTML = '<div class="x-mark"></div>';
-            });
+            return null; // No need to throw an error
+        } else {
+            return Promise.reject(`Unexpected status: ${response.status}`); // Only reject for unexpected issues
+        }
+    })
+    .catch(error => {
+        console.error('Unexpected error:', error);
+        externalUserStatus.innerHTML = '<div class="x-mark"></div>'; // Show error icon
+    });
         }
 
         function submitForm() {
