@@ -245,12 +245,26 @@ form {
         </form>
     </div>
     <script>
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("sponsorEmail").addEventListener("input", () => debounce(verifySponsor, 900));
-    document.getElementById("externalUserEmail").addEventListener("input", () => debounce(verifyExternalUser, 900));
+document.addEventListener("DOMContentLoaded", async function() {
+    await getUserSession(); // Ensure user session is loaded first
+
+    // Attach event listeners
+    document.getElementById("sponsorEmail").addEventListener("input", debounce(verifySponsor, 900));
+    document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
     document.getElementById("sponsorId").addEventListener("input", checkSubmitButton);
     document.getElementById("externalUserEmail").addEventListener("input", checkSubmitButton);
+
+    checkSubmitButton(); // Run check on load to disable submit initially
 });
+
+// Debounce function to optimize API calls
+function debounce(func, delay) {
+    let debounceTimeout;
+    return function (...args) {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => func(...args), delay);
+    };
+}
 
 // Function to enable/disable submit button based on conditions
 function checkSubmitButton() {
@@ -265,7 +279,40 @@ function checkSubmitButton() {
     }
 }
 
-// Verify sponsor function (updated for #EXT# check)
+// Function to fetch user session
+async function getUserSession() {
+    try {
+        const response = await fetch("/.auth/me");
+        if (!response.ok) {
+            throw new Error(`Session fetch failed: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (data.clientPrincipal) {
+            const userId = data.clientPrincipal.userId;
+            const emailClaim = data.clientPrincipal.claims.find(claim => 
+                claim.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+            );
+            const email = emailClaim ? emailClaim.val : "";
+
+            console.log("User ID:", userId);
+            console.log("User Email:", email);
+
+            document.getElementById("sponsorEmail").value = email;
+            document.getElementById("userId").value = userId;
+
+            return { userId, email };
+        } else {
+            console.warn("No user session found.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching user session:", error);
+        return null;
+    }
+}
+
+// Verify sponsor function (checks for #EXT#)
 function verifySponsor() {
     let sponsorEmail = document.getElementById("sponsorEmail").value;
     let sponsorStatus = document.getElementById("sponsorStatus");
@@ -278,7 +325,6 @@ function verifySponsor() {
         return;
     }
 
-    // If sponsor email contains #EXT#, return ❌ immediately
     if (sponsorEmail.includes("#EXT#")) {
         sponsorStatus.innerHTML = '<div class="x-mark"></div>';
         sponsorIdField.value = "";
@@ -313,7 +359,7 @@ function verifySponsor() {
     });
 }
 
-// Verify external user function (updated for email format check)
+// Verify external user function (checks email format)
 function verifyExternalUser() {
     let email = document.getElementById("externalUserEmail").value;
     let externalUserStatus = document.getElementById("externalUserStatus");
@@ -362,6 +408,25 @@ function verifyExternalUser() {
         externalUserStatus.dataset.status = "invalid";
         checkSubmitButton();
     });
+}
+
+// Form submission function (won't run if button is disabled)
+function submitForm() {
+    let sponsorEmail = document.getElementById("sponsorEmail").value;
+    let email = document.getElementById("externalUserEmail").value;
+    let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value;
+    let phoneNumber = document.getElementById("phoneNumber").value;
+    let company = document.getElementById("company").value;
+    let usageLocation = document.getElementById("usageLocation").value;
+    let sponsorId = document.getElementById("sponsorId").value;
+
+    if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
+        alert("Please fill in all fields before submitting.");
+        return;
+    }
+
+    console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
 }
 </script>
 </body>
