@@ -396,9 +396,9 @@ function verifyExternalUser() {
         event.preventDefault(); // Prevents default form submission
 
         const formData = {
-            sponsorId: document.getElementById("sponsorId").value,
+            sponsorUserId: document.getElementById("sponsorId").value,
             externalUserEmail: document.getElementById("externalUserEmail").value.trim(),
-            firstName: document.getElementById("firstName").value.trim(),
+            givenName: document.getElementById("firstName").value.trim(),
             lastName: document.getElementById("lastName").value.trim(),
             phoneNumber: document.getElementById("phoneNumber").value.trim(),
             company: document.getElementById("company").value.trim(),
