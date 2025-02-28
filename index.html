@@ -28,25 +28,32 @@
             width: 65%;
         }
 
-        .input-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            width: 100%;
-        }
-        .input-container input, .input-container select {
+    .input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    }
+
+    .input-container input,
+    .input-container select {
     flex: 1; 
     width: 100%; 
-}
-        .form-control {
-    width: 100%;
-}
+    padding: 10px; 
+    }
+
+    .form-control {
+    width: 100% !important; 
+    max-width: 100%; 
+    }
+
         .status-icon {
-            width: 25px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px; 
         }
 
         .loader {
@@ -226,7 +233,6 @@
     </div>
 
    <script>
-    // ✅ Define debounce function before it's used
     function debounce(func, delay) {
         let timer;
         return function (...args) {
@@ -335,6 +341,7 @@
 
     async function init() {
         await getUserSession();
+        verifySponsor();
         document.getElementById("sponsorEmail").addEventListener("input", debounce(verifySponsor, 900));
         document.getElementById("externalUserEmail").addEventListener("input", debounce(verifyExternalUser, 900));
     }
