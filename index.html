@@ -31,7 +31,7 @@ form {
 .input-container {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the items within the container */
+    justify-content: space-between; /* Space between input and status icon */
     margin-bottom: 1rem; /* Add some space between input groups */
 }
 .input-container input, .input-container select {
@@ -39,7 +39,7 @@ form {
     padding: 1%;
     border: 1px solid #ccc;
     border-radius: 4px;
-    max-width: 75%; /* Ensure consistent width */
+    max-width: calc(100% - 35px); /* Ensure consistent width */
 }
 .status-icon {
     width: 25px; /* Set a fixed width for the status icon */
