@@ -318,10 +318,10 @@ function verifyExternalUser() {
     let email = emailField.value.trim();
     let externalUserStatus = document.getElementById("externalUserStatus");
 
-    console.log("Captured Email:", email); // ✅ Check if email is being retrieved
+    console.log("Verifying External Email:", email); // ✅ Debugging log
 
-    if (!email || !/^[^\s@]+@[^\s@]+.[^\s@]+$/.test(email)) {
-        console.error("Invalid email format or empty field!");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        console.warn("⚠ Invalid email format or empty field.");
         setStatusInvalid(externalUserStatus);
         return;
     }
@@ -331,26 +331,32 @@ function verifyExternalUser() {
     fetch("https://prod-243.westeurope.logic.azure.com:443/workflows/59389dfa65a94805812431c37632b78f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=4Z3LMxjwyiznVxUaofinBdcLSN9JBQYp6eE6QUFkLrk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ externalUserEmail: email }),
+        body: JSON.stringify({ externalUserEmail: email })
     })
     .then(response => {
-        console.log("Response Status:", response.status); 
-        return response.json();
-    })
-    .then(data => {
-        console.log("API Response:", data); 
-        if (data.externalUserEmail) {
-            setStatusInvalid(externalUserStatus);
-        } else {
-            setStatusValid(externalUserStatus);
-        }
+        console.log("Response Status:", response.status);
+
+        if (response.status === 200) {
+            console.info("❌ Email is already taken.");
+            setStatusInvalid(externalUserStatus); // Show ❌ if email is taken
+            return null; // Don't parse JSON if not needed
+        } 
+        
+        if (response.status === 403) {
+            console.info("✅ Email is available.");
+            setStatusValid(externalUserStatus); // Show ✅ if email is available
+            return null;
+        } 
+        
+        throw new Error("Unexpected response status: " + response.status);
     })
     .catch(error => {
-        console.error("Error verifying external email:", error);
-        setStatusInvalid(externalUserStatus);
+        console.error("🚨 Unexpected error verifying email:", error);
+        setStatusInvalid(externalUserStatus); // ❌ Show X only for real issues
     })
     .finally(checkSubmitButton);
 }
+
 
 
     function setLoading(element) {
