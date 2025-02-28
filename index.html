@@ -356,9 +356,10 @@ form {
                 console.log('Response status:', response.status);
                 if (response.status === 200) {
                     externalUserStatus.innerHTML = '<div class="x-mark"></div>';
-                } else if (response.status === 404) {
-                
+                    return response.json();
+                } else if (response.status === 404) {        
             externalUserStatus.innerHTML = '<div class="check"></div>';
+                    return null;
                 } else {
                     externalUserStatus.innerHTML = '';
                 }
