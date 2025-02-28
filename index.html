@@ -313,9 +313,15 @@ async function getUserSession() {
 
             console.log("User Session Loaded:", { userId, email });
 
+            if (email) {
+                document.getElementById("sponsorEmail").value = email;
+                document.getElementById("userId").value = userId; // ✅ Store in correct hidden field
+                verifySponsor(); // ✅ Auto-verify prefilled sponsor
+            }
+
             return { userId, email };
         } else {
-            console.warn("No user session found.");
+            console.log("No user session found.");
             return null;
         }
     } catch (error) {
@@ -323,6 +329,20 @@ async function getUserSession() {
         return null;
     }
 }
+
+    
+document.addEventListener("DOMContentLoaded", function () {
+    getUserSession().then(user => {
+        if (user) {
+            console.log("User session retrieved:", user);
+        }
+    });
+});
+
+// 🔹 Reset sponsor ID if the sponsor email is manually changed
+document.getElementById("sponsorEmail").addEventListener("input", function () {
+    document.getElementById("userId").value = "";
+});
 
 // Verify sponsor function (checks for #EXT# and API validation)
 function verifySponsor() {
@@ -430,22 +450,38 @@ function verifyExternalUser() {
 }
 
 // Form submission function (will only run if button is enabled)
-function submitForm() {
-    let sponsorEmail = document.getElementById("sponsorEmail").value;
-    let email = document.getElementById("externalUserEmail").value;
-    let firstName = document.getElementById("firstName").value;
-    let lastName = document.getElementById("lastName").value;
-    let phoneNumber = document.getElementById("phoneNumber").value;
-    let company = document.getElementById("company").value;
-    let usageLocation = document.getElementById("usageLocation").value;
-    let sponsorId = document.getElementById("sponsorId").value;
+function submitForm(event) {
+    event.preventDefault(); // ✅ Prevent default form submission
 
-    if (!sponsorEmail || !email || !firstName || !lastName || !phoneNumber || !company || !usageLocation || !sponsorId) {
-        alert("Please fill in all fields before submitting.");
+    const sponsorEmail = document.getElementById("sponsorEmail").value.trim();
+    const sponsorId = document.getElementById("userId").value; // ✅ Fetch hidden sponsor ID
+    const externalEmail = document.getElementById("externalEmail").value.trim();
+    const submitButton = document.getElementById("submitButton");
+
+    console.log("Submitting form...");
+    console.log("Sponsor Email:", sponsorEmail);
+    console.log("Sponsor ID:", sponsorId);
+    console.log("External Email:", externalEmail);
+
+    if (!sponsorId) {
+        alert("Sponsor ID is missing. Please verify the sponsor email.");
         return;
     }
-    console.log("Submitting form with data:", { sponsorEmail, email, firstName, lastName, phoneNumber, company, usageLocation, sponsorId });
+
+    if (!externalEmail || !validateEmail(externalEmail)) {
+        alert("Invalid or missing external email.");
+        return;
+    }
+
+    if (externalEmail.includes("#EXT#")) {
+        alert("External email cannot contain '#EXT#'.");
+        return;
+    }
+
+    submitButton.disabled = false;
+    document.getElementById("myForm").submit();
 }
+
 </script>
 </body>
 </html>
