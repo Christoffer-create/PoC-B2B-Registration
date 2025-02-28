@@ -32,12 +32,14 @@ form {
     display: flex;
     align-items: center;
     justify-content: center; /* Center the items within the container */
+    margin-bottom: 1rem; /* Add some space between input groups */
 }
 .input-container input, .input-container select {
-    width: calc(75% - 25px); /* Adjust width to account for status icon */
+    flex: 1; /* Allow input fields to take available space */
     padding: 1%;
     border: 1px solid #ccc;
     border-radius: 4px;
+    max-width: 75%; /* Ensure consistent width */
 }
 .status-icon {
     width: 25px; /* Set a fixed width for the status icon */
@@ -45,6 +47,7 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 10px; /* Add some space between input and status icon */
 }
 .loader {
     border: 4px solid #f3f3f3; /* Adjusted border size for smaller loader */
