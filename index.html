@@ -277,9 +277,6 @@ async function getUserSession() {
             );
             const email = emailClaim ? emailClaim.val : "";
 
-            console.log("User Session Loaded:", { userId, email });
-
-            // ✅ Check if the sponsorEmail field exists before setting its value
             let sponsorEmailField = document.getElementById("sponsorEmail");
             if (sponsorEmailField) {
                 sponsorEmailField.value = email;
@@ -287,7 +284,6 @@ async function getUserSession() {
                 console.error("🚨 Error: sponsorEmail input field is missing in the HTML.");
             }
 
-            // ✅ Check if the sponsorId field exists before setting its value
             let sponsorIdField = document.getElementById("sponsorId");
             if (sponsorIdField) {
                 sponsorIdField.value = userId;
@@ -342,7 +338,7 @@ function verifySponsor() {
     })
     .then(data => {
         if (data && data.sponsorUserId) {  
-            console.log("✅ Sponsor Verified, ID:", data.sponsorUserId);
+            console.log("✅ Sponsor Verified");
             sponsorIdField.value = data.sponsorUserId;
             setStatusValid(sponsorStatus);
         } else {
@@ -365,8 +361,6 @@ function verifyExternalUser() {
     let email = emailField.value.trim();
     let externalUserStatus = document.getElementById("externalUserStatus");
 
-    console.log("Verifying External Email:", email); // ✅ Debugging log
-
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         console.warn("⚠ Invalid email format or empty field.");
         setStatusInvalid(externalUserStatus);
@@ -383,14 +377,12 @@ function verifyExternalUser() {
     .then(response => {
         console.log("Response Status:", response.status);
 
-        // ✅ If 201, treat it as "email available" (✅)
         if (response.status === 201) {
             console.info("✅ Email is available.");
             setStatusValid(externalUserStatus);
             return null;
         }
 
-        // ✅ If 200, treat it as "email already taken" (❌)
         if (response.status === 200) {
             console.info("❌ Email is already taken.");
             setStatusInvalid(externalUserStatus);
@@ -443,8 +435,8 @@ function submitForm(event) {
     event.preventDefault(); // Prevents default form submission
 
     const submitButton = document.getElementById("submitButton");
-    submitButton.disabled = true; // ✅ Disable button to prevent duplicate submissions
-    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; // ✅ Show loading icon
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
     const formData = {
         sponsorUserId: document.getElementById("sponsorId").value.trim(),
@@ -480,10 +472,9 @@ function submitForm(event) {
         }
     })
     .then(data => {
-        console.log("✅ Success:", data);
+        console.log("✅ Success");
         alert(data.message || "Form submitted successfully!");
 
-        // ✅ Clear form fields after successful submission
         document.getElementById("sponsorId").value = "";
         document.getElementById("sponsorEmail").value = "";
         document.getElementById("externalUserEmail").value = "";
@@ -493,15 +484,15 @@ function submitForm(event) {
         document.getElementById("company").value = "";
         document.getElementById("usageLocation").value = "";
 
-        submitButton.innerHTML = 'Submit'; // ✅ Reset button text
-        submitButton.disabled = false; // ✅ Re-enable button after success
+        submitButton.innerHTML = 'Submit'; 
+        submitButton.disabled = false;
     })
     .catch(error => {
         console.error("🚨 Error:", error);
         alert("There was an error submitting the form.");
 
-        submitButton.innerHTML = 'Submit'; // ✅ Reset button text
-        submitButton.disabled = false; // ✅ Re-enable button on error
+        submitButton.innerHTML = 'Submit'; 
+        submitButton.disabled = false; 
     });
 }
 </script>
