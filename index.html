@@ -31,29 +31,16 @@
 .input-container {
     display: flex;
     align-items: center;
-    gap: 10px; 
     width: 100%;
-}
-
-.input-container input {
-    flex: 1; 
-    width: 100%; 
-    padding: 10px;
-    box-sizing: border-box; 
-    min-width: 40%;
-    max-width: 100%;
+    gap: 10px; /* ✅ Ensures spacing between input and status icon */
 }
 
 .input-container input,
 .input-container select {
-    flex: 1; 
+    flex: 1;  
     width: 100%; 
     padding: 10px;
-    box-sizing: border-box;
-    min-width: 40%;
-    max-width: 100%; 
 }
-
 
 .form-control {
     width: 100% !important;
@@ -64,9 +51,11 @@
 
 
 .status-icon {
-    flex-shrink: 0; 
-    width: 24px; 
-    height: 24px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
