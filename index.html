@@ -437,6 +437,10 @@ function verifyExternalUser() {
 function submitForm(event) {
     event.preventDefault(); // Prevents default form submission
 
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true; // ✅ Disable button to prevent duplicate submissions
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; // ✅ Show loading icon
+
     const formData = {
         sponsorUserId: document.getElementById("sponsorId").value.trim(),
         sponsorEmail: document.getElementById("sponsorEmail").value.trim(),
@@ -448,7 +452,7 @@ function submitForm(event) {
         usageLocation: document.getElementById("usageLocation").value
     };
 
-    console.log("Submitting data:", formData); // ✅ Debugging output
+    console.log("Submitting data:", formData);
 
     fetch("https://prod-11.westeurope.logic.azure.com:443/workflows/b23e1da5f44a44d4911c31e5e7197a20/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=i0sgLEvvxCUkGDw7Z07QeOaypQ8M4VORZeH8cXZUM1s", {
         method: "POST",
@@ -464,7 +468,7 @@ function submitForm(event) {
 
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-            return response.json();  // ✅ Safely parse JSON response
+            return response.json();
         } else {
             console.warn("⚠ Response is not JSON.");
             return { message: "Form submitted successfully, but response is not JSON." };
@@ -473,10 +477,26 @@ function submitForm(event) {
     .then(data => {
         console.log("✅ Success:", data);
         alert(data.message || "Form submitted successfully!");
+
+        // ✅ Clear form fields after successful submission
+        document.getElementById("sponsorId").value = "";
+        document.getElementById("sponsorEmail").value = "";
+        document.getElementById("externalUserEmail").value = "";
+        document.getElementById("firstName").value = "";
+        document.getElementById("lastName").value = "";
+        document.getElementById("phoneNumber").value = "";
+        document.getElementById("company").value = "";
+        document.getElementById("usageLocation").value = "";
+
+        submitButton.innerHTML = 'Submit'; // ✅ Reset button text
+        submitButton.disabled = false; // ✅ Re-enable button after success
     })
     .catch(error => {
         console.error("🚨 Error:", error);
         alert("There was an error submitting the form.");
+
+        submitButton.innerHTML = 'Submit'; // ✅ Reset button text
+        submitButton.disabled = false; // ✅ Re-enable button on error
     });
 }
 </script>
