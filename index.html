@@ -326,7 +326,7 @@ function verifySponsor() {
         console.log("Response Status:", response.status);
 
         if (response.status === 201) {  
-            console.info("✅ Sponsor found.");
+            console.info("✅ Sponsor not found.");
             return response.json();
         } 
 
