@@ -342,7 +342,6 @@ function verifySponsor() {
             sponsorIdField.value = data.sponsorUserId;
             setStatusValid(sponsorStatus);
         } else {
-            console.warn("❌ No sponsor ID returned.");
             setStatusInvalid(sponsorStatus);
             sponsorIdField.value = "";
         }
