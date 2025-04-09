@@ -12,17 +12,7 @@
     },
     "403": {
       "statusCode": 403,
-      "redirect": "/unauthorized"
-    }
-  },
-  "auth": {
-    "identityProviders": {
-      "azureActiveDirectory": {
-        "registration": {
-          "openIdIssuer": "https://login.microsoftonline.com/YOUR_TENANT_ID/v2.0",
-          "clientIdSettingName": "AZURE_CLIENT_ID"
-        }
-      }
+      "redirect": "/unauthorized.html"
     }
   }
 }
