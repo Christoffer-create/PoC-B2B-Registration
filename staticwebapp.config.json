@@ -13,7 +13,8 @@
     "403": {
       "statusCode": 403,
       "redirect": "/unauthorized.html"
-    },
+    }
+  },
    "auth": {
      "identityProviders": {
        "azureActiveDirectory": {
@@ -25,4 +26,3 @@
      }
    }
   }
-}
